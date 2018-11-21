@@ -3,8 +3,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'remote-redux-devtools';
 import userEpic from './modules/user/actions';
 import userReducer from './modules/user/reducer';
+import routeReducer from './modules/route/reducer';
 
-const reducers = { user: userReducer };
+const reducers = { user: userReducer, route: routeReducer };
 const epics = combineEpics(userEpic);
 
 const epicMiddleware = createEpicMiddleware();
