@@ -1,7 +1,8 @@
+/* @flow */
 import { NativeRouter, Route, Link } from "react-router-native";
 import { StyleSheet, Text, View } from 'react-native';
-import Camera from './components/Camera';
-import Login from './components/Login';
+import Camera from './src/components/Camera';
+import Login from './src/components/Login';
 import React from 'react';
 
 const App = () => (
