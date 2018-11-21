@@ -1,9 +1,10 @@
 /* @flow */
 import { Text, TextInput, StyleSheet, View, Button } from 'react-native';
-import React from 'react';
+import { withRouter } from 'react-router-native';
 import Logo from './rossumLogo';
+import React from 'react';
 
-const Login = () => (
+const Login = withRouter(({ history }) => (
   <View style={styles.container}>
     <View style={styles.logoWrapper}>
       <View style={styles.logoText}>
@@ -38,19 +39,18 @@ const Login = () => (
       <View style={{ flex: 1 }}>
         <Button
           title='Login'
-          onPress={() => {}}
+          onPress={() => { history.push('/camera') }}
           color='white'
           style={{ backgroundColor: '#2f72ff' }}
         />
       </View>
     </View>
   </View>
-  )
+  ))
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1b1922',
-    marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'space-between',
     flex: 1,
