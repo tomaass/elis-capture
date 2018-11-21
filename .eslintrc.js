@@ -4,7 +4,10 @@ module.exports = {
       "airbnb"
     ],
     "rules": {
-      "react/jsx-filename-extension": false,
+      "react/jsx-filename-extension": 0,
+      "implicit-arrow-linebreak": 0,
+      "import/prefer-default-export": 0,
+      "no-use-before-define": 0,
     },
     "plugins": ["flowtype"],
 };

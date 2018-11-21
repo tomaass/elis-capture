@@ -1,18 +1,27 @@
 /* @flow */
-import { NativeRouter, Route, Link, BackButton } from "react-router-native";
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  NativeRouter,
+  Route,
+  BackButton,
+} from 'react-router-native';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
 import Camera from './src/components/Camera';
 import Login from './src/components/Login';
-import React from 'react';
+import store from './src/redux/configureStore';
 
 const App = () => (
-  <NativeRouter>
-    <View style={styles.container}>
-      <BackButton />
-      <Route exact path="/" component={Login} />
-      <Route path="/camera" component={Camera} />
-    </View>
-  </NativeRouter>
+  <Provider store={store}>
+    <NativeRouter>
+      <View style={styles.container}>
+        <BackButton />
+        <Route exact path="/" component={Login} />
+        <Route path="/camera" component={Camera} />
+      </View>
+    </NativeRouter>
+  </Provider>
+
 );
 
 const styles = StyleSheet.create({
@@ -20,7 +29,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     marginTop: 20,
-  }
+  },
 });
 
 export default App;
