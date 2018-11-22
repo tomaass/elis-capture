@@ -1,15 +1,10 @@
 /* @flow */
-import { Text, View, StyleSheet, Button, ImageBackground } from 'react-native';
+import { View, StyleSheet, ImageBackground } from 'react-native';
+import { Button, Text, Container, Icon, Content, Col, Grid, Footer } from 'native-base';
 import React from 'react';
 import { Camera as RNCamera, Permissions } from 'expo';
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#1b1922',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
   camera: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -52,16 +47,32 @@ class Camera extends React.Component<Props, State> {
     const { permissionsGranted, photoUri } = this.state;
     return permissionsGranted
       ? (
-        <View style={styles.container}>
+        <Container>
           { photoUri
             ? (
               <View style={{ flex: 1 }}>
                 <ImageBackground style={{ flex: 1 }} source={{ uri: photoUri }}>
-                  <Button
-                    style={{ color: 'white', fontSize: 20 }}
-                    title="Remove a photo"
-                    onPress={this.removePhoto}
-                  />
+                  <Content />
+                  <Footer style={{ backgroundColor: 'transparent' }}>
+                    <Grid>
+                      <Col style={{ width: '50%' }}>
+                        <Button full rounded onPress={this.removePhoto}>
+                          <Icon name="trash" />
+                          <Text style={{ textAlign: 'left' }}>
+                            Take again
+                          </Text>
+                        </Button>
+                      </Col>
+                      <Col style={{ width: '50%' }}>
+                        <Button full rounded onPress={this.removePhoto}>
+                          <Icon name="md-send" />
+                          <Text style={{ textAlign: 'left' }}>
+                            Send
+                          </Text>
+                        </Button>
+                      </Col>
+                    </Grid>
+                  </Footer>
                 </ImageBackground>
               </View>
             )
@@ -73,14 +84,15 @@ class Camera extends React.Component<Props, State> {
                   permissionDialogMessage="Ukážeš mi jí?"
                   ref={(ref) => { this.camera = ref; }}
                 />
-                <Button
-                  style={{ color: 'white', fontSize: 20 }}
-                  title="Take a photo"
-                  onPress={this.shoot}
-                />
+                <Button full onPress={this.shoot}>
+                  <Icon name="camera" />
+                  <Text>
+                    Take a photo
+                  </Text>
+                </Button>
               </View>
             )}
-        </View>
+        </Container>
       )
       : <Text>Nemáš mandát kundo</Text>;
   }
