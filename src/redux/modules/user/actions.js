@@ -1,17 +1,17 @@
 /* @flow */
 import { identity, negate } from 'lodash';
-import { from } from 'rxjs';
+import { from, of as _of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   mergeMap,
   pluck,
   map,
-  mapTo,
   filter,
 } from 'rxjs/operators';
 import { AsyncStorage } from 'react-native';
 import { combineEpics, ofType } from 'redux-observable';
 import { changeRoute } from '../route/actions';
+import { fetchQueues } from '../queues/actions';
 import { apiUrl } from '../../../constants/config';
 
 const loginUrl = `${apiUrl}/auth/login`;
@@ -74,7 +74,10 @@ const storeTokenEpic = action$ =>
 const loginUserFulfilledEpic = action$ =>
   action$.pipe(
     ofType(LOGIN_USER_FULFILLED),
-    mapTo(changeRoute('/camera')),
+    mergeMap(() => _of(
+      changeRoute('/camera'),
+      fetchQueues(),
+    )),
   );
 
 export default combineEpics(
