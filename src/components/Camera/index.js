@@ -1,8 +1,19 @@
 /* @flow */
 import { View, StyleSheet, ImageBackground } from 'react-native';
-import { Button, Text, Container, Icon, Content, Col, Grid, Footer } from 'native-base';
+import { connect } from 'react-redux';
+import {
+  Button,
+  Text,
+  Container,
+  Icon,
+  Content,
+  Col,
+  Grid,
+  Footer,
+} from 'native-base';
 import React from 'react';
 import { Camera as RNCamera, Permissions } from 'expo';
+import { uploadDocument } from '../../redux/modules/documents/actions';
 
 const styles = StyleSheet.create({
   camera: {
@@ -12,8 +23,8 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {}
-type State = { permissionsGranted: boolean, photoUri: string }
+type Props = { uploadDocument: Function }
+type State = { permissionsGranted: boolean, photo: ?Object }
 
 class Camera extends React.Component<Props, State> {
   camera = null
@@ -22,7 +33,7 @@ class Camera extends React.Component<Props, State> {
     super(props);
     this.state = {
       permissionsGranted: false,
-      photoUri: '',
+      photo: null,
     };
   }
 
@@ -34,24 +45,29 @@ class Camera extends React.Component<Props, State> {
   shoot = async () => {
     if (this.camera) {
       const photo = await this.camera.takePictureAsync();
-      const { uri } = photo;
-      this.setState({ photoUri: uri });
+      this.setState({ photo });
     }
   };
 
   removePhoto = () => {
-    this.setState({ photoUri: '' });
+    this.setState({ photo: null });
   }
 
+  sendPhoto = () =>
+    this.props.uploadDocument(this.state.photo);
+
   render() {
-    const { permissionsGranted, photoUri } = this.state;
+    const { permissionsGranted, photo } = this.state;
     return permissionsGranted
       ? (
         <Container>
-          { photoUri
+          {photo
             ? (
               <View style={{ flex: 1 }}>
-                <ImageBackground style={{ flex: 1 }} source={{ uri: photoUri }}>
+                <ImageBackground
+                  style={{ flex: 1 }}
+                  source={{ uri: photo.uri }}
+                >
                   <Content />
                   <Footer style={{ backgroundColor: 'transparent' }}>
                     <Grid>
@@ -64,7 +80,7 @@ class Camera extends React.Component<Props, State> {
                         </Button>
                       </Col>
                       <Col style={{ width: '50%' }}>
-                        <Button full rounded onPress={this.removePhoto}>
+                        <Button full rounded onPress={this.sendPhoto}>
                           <Icon name="md-send" />
                           <Text style={{ textAlign: 'left' }}>
                             Send
@@ -98,4 +114,8 @@ class Camera extends React.Component<Props, State> {
   }
 }
 
-export default Camera;
+const mapDispatchToProps = dispatch => ({
+  uploadDocument: (...args) => dispatch(uploadDocument(...args)),
+});
+
+export default connect(null, mapDispatchToProps)(Camera);
