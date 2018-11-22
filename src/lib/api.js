@@ -3,8 +3,6 @@ import { AsyncStorage } from 'react-native';
 import { from } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { mergeMap, first } from 'rxjs/operators';
-import { apiUrl } from '../constants/config';
-
 
 const authDefaultSettings = (token: string, settings: HeadersInit = {}) => ({
   'Content-Type': 'application/json',
@@ -16,17 +14,10 @@ const authDefaultSettings = (token: string, settings: HeadersInit = {}) => ({
 const withToken = (fn: Function) =>
   from(AsyncStorage.getItem('TOKEN')).pipe(mergeMap(fn), first());
 
-export const authPost = (endpoint: string, body: any, settings: HeadersInit) =>
+export const authPost = (url: string, body: any, settings: HeadersInit) =>
   withToken((token: string) =>
-    ajax.post(
-      `${apiUrl}${endpoint}`,
-      body,
-      authDefaultSettings(token, settings),
-    ));
+    ajax.post(url, body, authDefaultSettings(token, settings)));
 
-export const authGetJSON = (endpoint: string, settings: HeadersInit) =>
+export const authGetJSON = (url: string, settings: HeadersInit) =>
   withToken((token: string) =>
-    ajax.getJSON(
-      `${apiUrl}${endpoint}`,
-      authDefaultSettings(token, settings),
-    ));
+    ajax.getJSON(url, authDefaultSettings(token, settings)));
