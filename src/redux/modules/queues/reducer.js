@@ -1,7 +1,7 @@
 /* @flow */
 import Immutable, { type Immutable as ImmutableType } from 'seamless-immutable';
-import { first } from 'lodash';
-import { FETCH_QUEUES_FULFILLED } from './actions';
+import { first, findIndex, last } from 'lodash';
+import { FETCH_QUEUES_FULFILLED, NEXT_QUEUE, PREVIOUS_QUEUE } from './actions';
 
 type Queue = {
   workspace: string,
@@ -32,6 +32,21 @@ function reducer(state: State = initialState, action: Object) {
         .set('currentQueueId', first(results).id)
         .set('queues', results);
     }
+
+    case NEXT_QUEUE: {
+      const { currentQueueId } = state;
+      const currentQueueIndex = findIndex(state.queues, { id: currentQueueId });
+      const { id } = state.queues[currentQueueIndex + 1] || first(state.queues);
+      return state.set('currentQueueId', id);
+    }
+
+    case PREVIOUS_QUEUE: {
+      const { currentQueueId } = state;
+      const currentQueueIndex = findIndex(state.queues, { id: currentQueueId });
+      const { id } = state.queues[currentQueueIndex - 1] || last(state.queues);
+      return state.set('currentQueueId', id);
+    }
+
     default: {
       return state;
     }
