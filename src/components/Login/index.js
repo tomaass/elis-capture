@@ -82,9 +82,9 @@ class Login extends React.Component<Props, State> {
   keyboardDidHide = () =>
     this.setState({ keyboardIsOpen: false });
 
-  componentWillMount() {
-    this.props.login();
-  }
+  // componentWillMount() {
+  //   this.props.login();
+  // }
 
   render() {
     const { username, password, keyboardIsOpen } = this.state;
