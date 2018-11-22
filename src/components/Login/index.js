@@ -6,9 +6,13 @@ import {
   StyleSheet,
   View,
   Button,
+  Image,
+  Keyboard,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { loginUser } from '../../redux/modules/user/actions';
+
+import logo from '../../images/logo2.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +23,8 @@ const styles = StyleSheet.create({
   },
 
   logoWrapper: {
+    flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
   },
 
@@ -28,6 +34,7 @@ const styles = StyleSheet.create({
   },
 
   logoText: {
+    flex: 1,
     flexDirection: 'row',
   },
 
@@ -42,24 +49,46 @@ const styles = StyleSheet.create({
   },
 });
 
-type State = { username: string, password: string }
+type State = { username: string, password: string, keyboardIsOpen: boolean }
 type Props = { login: Function }
 
 class Login extends React.Component<Props, State> {
+  keyboardDidShowListener = {};
+
+  keyboardDidHideListener = {};
+
   constructor(props: Props) {
     super(props);
     this.state = {
       username: '',
       password: '',
+      keyboardIsOpen: false,
     };
   }
 
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  keyboardDidShow = () =>
+    this.setState({ keyboardIsOpen: true });
+
+  keyboardDidHide = () =>
+    this.setState({ keyboardIsOpen: false });
+
   render() {
-    const { username, password } = this.state;
+    const { username, password, keyboardIsOpen } = this.state;
     const { login } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.logoWrapper}>
+          {!keyboardIsOpen && <Image source={logo} style={{ flex: 1, width: 100 }} />}
           <View style={styles.logoText}>
             <Text style={[styles.whiteText, styles.boldText]}>
               ELIS
