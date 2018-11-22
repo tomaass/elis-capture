@@ -1,5 +1,5 @@
 /* @flow */
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Button, ImageBackground } from 'react-native';
 import React from 'react';
 import { Camera as RNCamera, Permissions } from 'expo';
 
@@ -18,14 +18,17 @@ const styles = StyleSheet.create({
 });
 
 type Props = {}
-type State = { permissionsGranted: boolean }
+type State = { permissionsGranted: boolean, photoUri: string }
 
 class Camera extends React.Component<Props, State> {
   camera = null
 
   constructor(props: Props) {
     super(props);
-    this.state = { permissionsGranted: false };
+    this.state = {
+      permissionsGranted: false,
+      photoUri: '',
+    };
   }
 
   async componentDidMount() {
@@ -36,19 +39,47 @@ class Camera extends React.Component<Props, State> {
   shoot = async () => {
     if (this.camera) {
       const photo = await this.camera.takePictureAsync();
+      const { uri } = photo;
+      this.setState({ photoUri: uri });
     }
   };
 
+  removePhoto = () => {
+    this.setState({ photoUri: '' });
+  }
+
   render() {
-    const { permissionsGranted } = this.state;
+    const { permissionsGranted, photoUri } = this.state;
     return permissionsGranted
       ? (
         <View style={styles.container}>
-          <RNCamera
-            type={RNCamera.Constants.Type.back}
-            permissionDialogMessage="Ukážeš mi jí?"
-            ref={(ref) => { this.camera = ref; }}
-          />
+          { photoUri
+            ? (
+              <View style={{ flex: 1 }}>
+                <ImageBackground style={{ flex: 1 }} source={{ uri: photoUri }}>
+                  <Button
+                    style={{ color: 'white', fontSize: 20 }}
+                    title="Remove a photo"
+                    onPress={this.removePhoto}
+                  />
+                </ImageBackground>
+              </View>
+            )
+            : (
+              <View style={{ flex: 1 }}>
+                <RNCamera
+                  style={styles.camera}
+                  type={RNCamera.Constants.Type.back}
+                  permissionDialogMessage="Ukážeš mi jí?"
+                  ref={(ref) => { this.camera = ref; }}
+                />
+                <Button
+                  style={{ color: 'white', fontSize: 20 }}
+                  title="Take a photo"
+                  onPress={this.shoot}
+                />
+              </View>
+            )}
         </View>
       )
       : <Text>Nemáš mandát kundo</Text>;
