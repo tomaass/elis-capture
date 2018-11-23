@@ -5,7 +5,7 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Button,
+  TouchableOpacity,
   Image,
   Keyboard,
 } from 'react-native';
@@ -19,33 +19,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#1b1922',
     flexDirection: 'column',
     justifyContent: 'center',
-    flex: 1,
-  },
-
-  logoWrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-
-  formWrapper: {
     alignItems: 'center',
     flex: 1,
   },
-
-  logoText: {
-    flex: 1,
-    flexDirection: 'row',
+  FormWrapper: {
+    flex: 2,
+    justifyContent: 'flex-start',
+    marginTop: 40,
+    alignItems: 'center',
+    width: '80%',
   },
-
-  whiteText: {
-    color: 'white',
-    fontSize: 20,
+  Input: {
+    width: '80%',
+    margin: 5,
+    borderBottomColor: '#403e46',
+    borderBottomWidth: 1,
   },
-
-  boldText: {
-    fontWeight: 'bold',
-    fontSize: 20,
+  Button: {
+    width: '30%',
+    height: 40,
+    backgroundColor: '#2f72ff',
+    borderRadius: 10,
+    marginTop: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
@@ -66,6 +63,10 @@ class Login extends React.Component<Props, State> {
     };
   }
 
+  componentWillMount() {
+    this.props.login();
+  }
+
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
@@ -82,59 +83,80 @@ class Login extends React.Component<Props, State> {
   keyboardDidHide = () =>
     this.setState({ keyboardIsOpen: false });
 
-  // componentWillMount() {
-  //   this.props.login();
-  // }
-
   render() {
     const { username, password, keyboardIsOpen } = this.state;
     const { login } = this.props;
     return (
       <View style={styles.container}>
-        <View style={styles.logoWrapper}>
-          {!keyboardIsOpen && <Image source={logo} style={{ flex: 1, width: 100 }} />}
-          <View style={styles.logoText}>
-            <Text style={[styles.whiteText, styles.boldText]}>
-              ELIS
-            </Text>
-            <Text style={styles.whiteText}>
-              CAPTURE
-            </Text>
-          </View>
-          <View style={styles.logoText}>
-            <Text style={{ color: 'white' }}>
+        <View style={{
+          flex: keyboardIsOpen ? 0.5 : 2,
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+        >
+          <Image source={logo} style={{ width: 70, height: 70 }} />
+          <View style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: 10,
+          }}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{
+                color: 'white',
+                fontSize: 20,
+                letterSpacing: 1,
+                fontWeight: 'bold',
+              }}
+              >
+                ELIS
+              </Text>
+              <Text>{'   '}</Text>
+              <Text style={{
+                color: 'white',
+                fontSize: 20,
+                letterSpacing: 1,
+              }}
+              >
+                CAPTURE
+              </Text>
+            </View>
+            <Text style={{ color: 'white', opacity: 0.7 }}>
               by ROSSUM
             </Text>
           </View>
         </View>
-        <View style={styles.formWrapper}>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              value={username}
-              style={{ color: '#979797' }}
-              placeholder="E-mail"
-              onChangeText={value => this.setState({ username: value })}
-              placeholderTextColor="#979797"
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              value={password}
-              style={{ color: '#979797' }}
-              placeholder="Password"
-              onChangeText={value => this.setState({ password: value })}
-              placeholderTextColor="#979797"
-              secureTextEntry
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Button
-              title="Login"
-              onPress={() => login({ password, username })}
-              color="white"
-              style={{ backgroundColor: '#2f72ff' }}
-            />
-          </View>
+        <View style={styles.FormWrapper}>
+          <TextInput
+            value={username}
+            placeholder="E-mail"
+            onChangeText={value =>
+              this.setState({ username: value })}
+            placeholderTextColor="#979797"
+            style={styles.Input}
+            underlineColorAndroid="rgba(0,0,0,0)"
+          />
+          <TextInput
+            value={password}
+            placeholder="Password"
+            onChangeText={value =>
+              this.setState({ password: value })}
+            placeholderTextColor="#979797"
+            style={styles.Input}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            secureTextEntry
+          />
+          <TouchableOpacity
+            onPress={() => login({ password, username })}
+            style={styles.Button}
+          >
+            <View>
+              <Text style={{ color: 'white' }}>
+                Login
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
