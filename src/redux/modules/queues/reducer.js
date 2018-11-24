@@ -1,6 +1,6 @@
 /* @flow */
 import Immutable, { type Immutable as ImmutableType } from 'seamless-immutable';
-import { FETCH_QUEUES_FULFILLED, NEXT_QUEUE } from './actions';
+import { FETCH_QUEUES_FULFILLED, SELECT_QUEUE } from './actions';
 
 export type Queue = {
   workspace: string,
@@ -16,11 +16,11 @@ export type Queue = {
 
 type State = ImmutableType<{
   queues: Array<Queue>,
-  currentQueueIndex: ?number,
+  currentQueueIndex: number,
 }>;
 const initialState: State = Immutable({
   queues: [],
-  currentQueueIndex: null,
+  currentQueueIndex: 0,
 });
 
 function reducer(state: State = initialState, action: Object) {
@@ -32,9 +32,8 @@ function reducer(state: State = initialState, action: Object) {
         .set('queues', results);
     }
 
-    case NEXT_QUEUE:
+    case SELECT_QUEUE:
       return state.set('currentQueueIndex', action.payload.index);
-
 
     default: {
       return state;

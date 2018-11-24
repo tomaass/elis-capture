@@ -1,13 +1,21 @@
 /* @flow */
 import React from 'react';
 import { Permissions } from 'expo';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import Preview from '../Preview';
 import Camera from '../Camera';
 import NoPermission from '../NoPremission';
 import { uploadDocument } from '../../redux/modules/documents/actions';
+import { selectQueue } from '../../redux/modules/queues/actions';
+import QueuePicker from '../QueuePicker';
+import type { Queue } from '../../redux/modules/queues/reducer';
 
-type Props = { send: Function }
+type Props = {
+  queues: Array<Queue>,
+  selectQueue: Function,
+  send: Function,
+}
 type State = { permissionsGranted: boolean, photo: ?Object }
 
 class CameraHandler extends React.Component<Props, State> {
@@ -44,26 +52,44 @@ class CameraHandler extends React.Component<Props, State> {
 
   render() {
     const { permissionsGranted, photo } = this.state;
-    return permissionsGranted
-      ? photo
-        ? (
-          <Preview
-            photoUri={photo.uri}
-            remove={this.remove}
-            send={this.send}
+    const { queues } = this.props;
+    return (
+      <View style={{ position: 'relative', width: '100%', height: '100%' }}>
+        {permissionsGranted
+          ? photo
+            ? (
+              <Preview
+                photoUri={photo.uri}
+                remove={this.remove}
+                send={this.send}
+              />
+            )
+            : (
+              <Camera
+                getRef={(ref) => { this.camera = ref; }}
+                shoot={this.shoot}
+              />
+            ) : <NoPermission />
+          }
+        {!!queues.length && (
+          <QueuePicker
+            queues={queues}
+            onQueuePick={this.props.selectQueue}
           />
-        )
-        : (
-          <Camera
-            getRef={(ref) => { this.camera = ref; }}
-            shoot={this.shoot}
-          />
-        ) : <NoPermission />;
+        )}
+      </View>
+    );
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   send: (...args) => dispatch(uploadDocument(...args)),
+  selectQueue: (...args) => dispatch(selectQueue(...args)),
 });
 
-export default connect(null, mapDispatchToProps)(CameraHandler);
+const mapStateToProps = state => ({
+  queues: state.queues.queues,
+  currentQueueIndex: state.queues.currentQueueIndex,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraHandler);

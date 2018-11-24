@@ -5,14 +5,14 @@ import { apiUrl } from '../../../constants/config';
 
 export const FETCH_QUEUES = 'FETCH_QUEUES';
 export const FETCH_QUEUES_FULFILLED = 'FETCH_QUEUES_FULFILLED';
-export const NEXT_QUEUE = 'NEXT_QUEUE';
+export const SELECT_QUEUE = 'SELECT_QUEUE';
 
 export const fetchQueues = () => ({
   type: FETCH_QUEUES,
 });
 
-export const nextQueue = index => ({
-  type: NEXT_QUEUE,
+export const selectQueue = index => ({
+  type: SELECT_QUEUE,
   payload: { index },
 });
 
