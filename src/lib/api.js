@@ -1,15 +1,16 @@
 /* @flow */
 import { AsyncStorage } from 'react-native';
 import { from } from 'rxjs';
+import { pickBy, identity } from 'lodash';
 import { ajax } from 'rxjs/ajax';
 import { mergeMap, first } from 'rxjs/operators';
 
-const authDefaultSettings = (token: string, settings: HeadersInit = {}) => ({
+const authDefaultSettings = (token: string, settings: HeadersInit = {}) => pickBy({
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Authorization: `Token ${token}`,
   ...settings,
-});
+}, identity);
 
 const withToken = (fn: Function) =>
   from(AsyncStorage.getItem('TOKEN')).pipe(mergeMap(fn), first());

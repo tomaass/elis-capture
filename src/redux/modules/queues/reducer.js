@@ -1,9 +1,8 @@
 /* @flow */
 import Immutable, { type Immutable as ImmutableType } from 'seamless-immutable';
-import { first, findIndex, last } from 'lodash';
-import { FETCH_QUEUES_FULFILLED, NEXT_QUEUE, PREVIOUS_QUEUE } from './actions';
+import { FETCH_QUEUES_FULFILLED, NEXT_QUEUE } from './actions';
 
-type Queue = {
+export type Queue = {
   workspace: string,
   annotations: Array<string>,
   id: number,
@@ -17,11 +16,11 @@ type Queue = {
 
 type State = ImmutableType<{
   queues: Array<Queue>,
-  currentQueueId: ?number,
+  currentQueueIndex: ?number,
 }>;
 const initialState: State = Immutable({
   queues: [],
-  currentQueueId: null,
+  currentQueueIndex: null,
 });
 
 function reducer(state: State = initialState, action: Object) {
@@ -29,23 +28,13 @@ function reducer(state: State = initialState, action: Object) {
     case FETCH_QUEUES_FULFILLED: {
       const { results } = action.payload;
       return state
-        .set('currentQueueId', first(results).id)
+        .set('currentQueueIndex', 0)
         .set('queues', results);
     }
 
-    case NEXT_QUEUE: {
-      const { currentQueueId } = state;
-      const currentQueueIndex = findIndex(state.queues, { id: currentQueueId });
-      const { id } = state.queues[currentQueueIndex + 1] || first(state.queues);
-      return state.set('currentQueueId', id);
-    }
+    case NEXT_QUEUE:
+      return state.set('currentQueueIndex', action.payload.index);
 
-    case PREVIOUS_QUEUE: {
-      const { currentQueueId } = state;
-      const currentQueueIndex = findIndex(state.queues, { id: currentQueueId });
-      const { id } = state.queues[currentQueueIndex - 1] || last(state.queues);
-      return state.set('currentQueueId', id);
-    }
 
     default: {
       return state;

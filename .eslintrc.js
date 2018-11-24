@@ -10,6 +10,7 @@ module.exports = {
       "no-use-before-define": 0,
       "no-confusing-arrow": 0,
       "react/destructuring-assignment": 0,
+      "no-nested-ternary": 0,
     },
     "plugins": ["flowtype"],
 };
