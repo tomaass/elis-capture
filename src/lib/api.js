@@ -4,6 +4,7 @@ import { from } from 'rxjs';
 import { pickBy, identity } from 'lodash';
 import { ajax } from 'rxjs/ajax';
 import { mergeMap, first } from 'rxjs/operators';
+import { TOKEN } from '../constants/config';
 
 const authDefaultSettings = (token: string, settings: HeadersInit = {}) => pickBy({
   'Content-Type': 'application/json',
@@ -13,7 +14,7 @@ const authDefaultSettings = (token: string, settings: HeadersInit = {}) => pickB
 }, identity);
 
 const withToken = (fn: Function) =>
-  from(AsyncStorage.getItem('TOKEN')).pipe(mergeMap(fn), first());
+  from(AsyncStorage.getItem(TOKEN)).pipe(mergeMap(fn), first());
 
 export const authPost = (url: string, body: any, settings: HeadersInit) =>
   withToken((token: string) =>

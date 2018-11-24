@@ -15,6 +15,7 @@ export type FlashMode = 'auto' | 'on' | 'off';
 
 type Props = {
   queues: Array<Queue>,
+  currentQueueIndex: number,
   selectQueue: Function,
   send: Function,
 }
@@ -67,7 +68,7 @@ class CameraHandler extends React.Component<Props, State> {
 
   render() {
     const { permissionsGranted, photo, flashMode } = this.state;
-    const { queues } = this.props;
+    const { queues, currentQueueIndex } = this.props;
     return (
       <View style={{ position: 'relative', width: '100%', height: '100%' }}>
         {permissionsGranted
@@ -91,6 +92,7 @@ class CameraHandler extends React.Component<Props, State> {
         {!!queues.length && (
           <QueuePicker
             queues={queues}
+            currentQueueIndex={currentQueueIndex}
             onQueuePick={this.props.selectQueue}
           />
         )}
