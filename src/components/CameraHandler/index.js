@@ -11,12 +11,20 @@ import { selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import type { Queue } from '../../redux/modules/queues/reducer';
 
+export type FlashMode = 'auto' | 'on' | 'off';
+
 type Props = {
   queues: Array<Queue>,
   selectQueue: Function,
   send: Function,
 }
-type State = { permissionsGranted: boolean, photo: ?Object }
+type State = {
+  permissionsGranted: boolean,
+  photo: ?Object,
+  flashMode: FlashMode,
+}
+
+const flashModes: Array<FlashMode> = ['on', 'off', 'auto'];
 
 class CameraHandler extends React.Component<Props, State> {
   camera = null
@@ -26,6 +34,7 @@ class CameraHandler extends React.Component<Props, State> {
     this.state = {
       permissionsGranted: false,
       photo: null,
+      flashMode: 'auto',
     };
   }
 
@@ -50,8 +59,14 @@ class CameraHandler extends React.Component<Props, State> {
     this.setState({ photo: null });
   }
 
+  onFlashModeChange = () => {
+    const index = flashModes.indexOf(this.state.flashMode);
+    const flashMode = flashModes[index + 1] || flashModes[0];
+    this.setState({ flashMode });
+  }
+
   render() {
-    const { permissionsGranted, photo } = this.state;
+    const { permissionsGranted, photo, flashMode } = this.state;
     const { queues } = this.props;
     return (
       <View style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -66,6 +81,8 @@ class CameraHandler extends React.Component<Props, State> {
             )
             : (
               <Camera
+                onFlashModeChange={this.onFlashModeChange}
+                flashMode={flashMode}
                 getRef={(ref) => { this.camera = ref; }}
                 shoot={this.shoot}
               />

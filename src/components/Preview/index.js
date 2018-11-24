@@ -13,16 +13,13 @@ const Preview = ({ send, remove, photoUri }: Props) => (
   <View style={{ flex: 1, backgroundColor: '#1b1922' }}>
     <View style={{
       margin: '10%',
+      marginTop: '25%',
       flex: 9,
       marginBottom: 0,
     }}
     >
       <ImageBackground
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-        }}
+        style={{ flex: 1 }}
         source={{ uri: photoUri }}
       />
     </View>
