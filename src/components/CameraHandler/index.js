@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react';
 import { Permissions } from 'expo';
-import { View } from 'react-native';
+import { View, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Preview from '../Preview';
 import Camera from '../Camera';
@@ -10,6 +10,7 @@ import { uploadDocument } from '../../redux/modules/documents/actions';
 import { selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import type { Queue } from '../../redux/modules/queues/reducer';
+import { FLASHMODE } from '../../constants/config';
 
 export type FlashMode = 'auto' | 'on' | 'off';
 
@@ -40,8 +41,12 @@ class CameraHandler extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    const flashMode = await AsyncStorage.getItem(FLASHMODE) || 'auto';
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ permissionsGranted: status === 'granted' });
+    this.setState({
+      permissionsGranted: status === 'granted',
+      flashMode,
+    });
   }
 
   shoot = async () => {
@@ -64,6 +69,7 @@ class CameraHandler extends React.Component<Props, State> {
     const index = flashModes.indexOf(this.state.flashMode);
     const flashMode = flashModes[index + 1] || flashModes[0];
     this.setState({ flashMode });
+    AsyncStorage.setItem(FLASHMODE, flashMode);
   }
 
   render() {
