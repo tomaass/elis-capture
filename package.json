@@ -39,6 +39,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-modal-dropdown": "^0.6.2",
     "react-native-shadow": "^1.2.2",
+    "react-native-snap-carousel": "^3.7.5",
     "react-native-svg": "^8.0.8",
     "react-native-swiper": "^1.5.13",
     "react-redux": "^5.1.1",
