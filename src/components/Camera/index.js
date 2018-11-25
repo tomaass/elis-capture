@@ -15,6 +15,8 @@ type Props = {
   getRef: Function,
   onFlashModeChange: Function,
   flashMode: FlashMode,
+  ratio: string,
+  onCameraReady: Function,
 }
 
 const styles = StyleSheet.create({
@@ -30,6 +32,8 @@ const Camera = ({
   shoot,
   flashMode,
   onFlashModeChange,
+  ratio,
+  onCameraReady,
 }: Props) => (
   <View style={{
     flex: 1,
@@ -44,6 +48,8 @@ const Camera = ({
       flashMode={RNCamera.Constants.FlashMode[flashMode]}
       permissionDialogMessage="Ukážeš mi jí?"
       ref={getRef}
+      ratio={ratio}
+      onCameraReady={onCameraReady}
     />
     <View
       style={{

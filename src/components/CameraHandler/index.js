@@ -1,7 +1,12 @@
 /* @flow */
 import React from 'react';
 import { Permissions } from 'expo';
-import { View, AsyncStorage } from 'react-native';
+import {
+  View,
+  AsyncStorage,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import { connect } from 'react-redux';
 import Preview from '../Preview';
 import Camera from '../Camera';
@@ -11,6 +16,12 @@ import { selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import type { Queue } from '../../redux/modules/queues/reducer';
 import { FLASHMODE } from '../../constants/config';
+
+const calcScreenRatio = (naturalRatio, coef = 1) =>
+  (naturalRatio * coef) === Math.floor(naturalRatio * coef)
+    ? `${naturalRatio * coef}:${coef}`
+    : calcScreenRatio(naturalRatio, coef + 1);
+
 
 export type FlashMode = 'auto' | 'on' | 'off';
 
@@ -24,6 +35,7 @@ type State = {
   permissionsGranted: boolean,
   photo: ?Object,
   flashMode: FlashMode,
+  ratio: string,
 }
 
 const flashModes: Array<FlashMode> = ['on', 'off', 'auto'];
@@ -37,6 +49,7 @@ class CameraHandler extends React.Component<Props, State> {
       permissionsGranted: false,
       photo: null,
       flashMode: 'auto',
+      ratio: '4:3',
     };
   }
 
@@ -47,6 +60,21 @@ class CameraHandler extends React.Component<Props, State> {
       permissionsGranted: status === 'granted',
       flashMode,
     });
+  }
+
+  getRatio = async () => {
+    const { width, height } = Dimensions.get('window');
+    const naturalRatio = height / width;
+    const roundedNaturalRatio = Math.round(naturalRatio * 10) / 10;
+    const screenRatio = calcScreenRatio(roundedNaturalRatio);
+
+    if (Platform.OS === 'android' && this.camera) {
+      const ratios = await this.camera.getSupportedRatiosAsync();
+      const bestRatio = ratios.find(ratio => ratio === screenRatio);
+      const commonRatio = ratios.find(ratio => ratio === '4:3');
+      const anyRatio = ratios[ratios.length - 1];
+      this.setState({ ratio: bestRatio || commonRatio || anyRatio });
+    }
   }
 
   shoot = async () => {
@@ -90,6 +118,8 @@ class CameraHandler extends React.Component<Props, State> {
               <Camera
                 onFlashModeChange={this.onFlashModeChange}
                 flashMode={flashMode}
+                ratio={this.state.ratio}
+                onCameraReady={this.getRatio}
                 getRef={(ref) => { this.camera = ref; }}
                 shoot={this.shoot}
               />

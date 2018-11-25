@@ -22,7 +22,8 @@ class Preview extends React.Component<Props, State> {
 
   render() {
     const { send, remove, photoUri } = this.props;
-    const { width, height } = Dimensions.get('window');
+    const x = Dimensions.get('window');
+    const { width, height } = x;
     const { currentIndex } = this.state;
     return (
       <View
