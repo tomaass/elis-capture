@@ -7,6 +7,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
+import { set } from 'lodash';
 import { connect } from 'react-redux';
 import Preview from '../Preview';
 import Camera from '../Camera';
@@ -33,9 +34,11 @@ type Props = {
 }
 type State = {
   permissionsGranted: boolean,
-  photo: ?Object,
+  files: Array<Object>,
   flashMode: FlashMode,
   ratio: string,
+  showPreview: boolean,
+  redoing: ?number,
 }
 
 const flashModes: Array<FlashMode> = ['on', 'off', 'auto'];
@@ -47,9 +50,11 @@ class CameraHandler extends React.Component<Props, State> {
     super(props);
     this.state = {
       permissionsGranted: false,
-      photo: null,
+      files: [],
       flashMode: 'auto',
       ratio: '4:3',
+      showPreview: false,
+      redoing: null,
     };
   }
 
@@ -79,19 +84,38 @@ class CameraHandler extends React.Component<Props, State> {
 
   shoot = async () => {
     if (this.camera) {
+      const { files, redoing } = this.state;
       const photo = await this.camera.takePictureAsync();
-      this.setState({ photo });
+      const newFiles = (typeof redoing === 'number')
+        ? set(files, redoing, photo)
+        : [...files, photo];
+      this.setState({
+        files: newFiles,
+        showPreview: !files.length,
+        redoing: null,
+      });
     }
   };
 
-  remove = () => {
-    this.setState({ photo: null });
+  remove = (index) => {
+    const { files } = this.state;
+    this.setState({ files: files.filter((_, i) => index !== i) });
+  }
+
+  removeAll = () => {
+    this.setState({
+      files: [],
+      showPreview: false,
+    });
   }
 
   send = () => {
-    this.props.send(this.state.photo);
-    this.setState({ photo: null });
+    this.props.send(this.state.files);
+    this.removeAll();
   }
+
+  addPages = () =>
+    this.setState({ showPreview: false });
 
   onFlashModeChange = () => {
     const index = flashModes.indexOf(this.state.flashMode);
@@ -100,18 +124,36 @@ class CameraHandler extends React.Component<Props, State> {
     AsyncStorage.setItem(FLASHMODE, flashMode);
   }
 
+  redo = (index) => {
+    this.setState({
+      showPreview: false,
+      redoing: index,
+    });
+  }
+
+  openPreview = () =>
+    this.setState({ showPreview: true });
+
   render() {
-    const { permissionsGranted, photo, flashMode } = this.state;
+    const {
+      permissionsGranted,
+      files,
+      flashMode,
+      showPreview,
+    } = this.state;
     const { queues, currentQueueIndex } = this.props;
     return (
       <View style={{ position: 'relative', width: '100%', height: '100%' }}>
         {permissionsGranted
-          ? photo
+          ? showPreview
             ? (
               <Preview
-                photoUri={photo.uri}
+                files={files}
                 remove={this.remove}
+                removeAll={this.removeAll}
                 send={this.send}
+                addPages={this.addPages}
+                redo={this.redo}
               />
             )
             : (
@@ -122,6 +164,10 @@ class CameraHandler extends React.Component<Props, State> {
                 onCameraReady={this.getRatio}
                 getRef={(ref) => { this.camera = ref; }}
                 shoot={this.shoot}
+                openPreview={this.openPreview}
+                multiple={files.length > 1}
+                send={this.send}
+                pagesCount={files.length}
               />
             ) : <NoPermission />
           }

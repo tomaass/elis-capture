@@ -11,12 +11,16 @@ import RightFooter from './component/RightFooter';
 import type { FlashMode } from '../CameraHandler';
 
 type Props = {
-  shoot: Function,
-  getRef: Function,
-  onFlashModeChange: Function,
+  multiple: boolean,
   flashMode: FlashMode,
+  pagesCount: number,
   ratio: string,
+  onFlashModeChange: Function,
   onCameraReady: Function,
+  getRef: Function,
+  shoot: Function,
+  openPreview: Function,
+  send: Function,
 }
 
 const styles = StyleSheet.create({

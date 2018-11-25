@@ -5,9 +5,12 @@ import { Button } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 
 type Props = {
-  send: Function,
+  files: Array<Object>,
   remove: Function,
-  photoUri: string,
+  removeAll: Function,
+  send: Function,
+  addPages: Function,
+  redo: Function,
 }
 
 type State = {
