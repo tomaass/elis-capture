@@ -1,11 +1,21 @@
 /* @flow */
 import React from 'react';
-import { View, Image, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+  Text,
+  View,
+  ImageBackground,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import { Button, Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
+import IndexNumber from './components/IndexNumber';
+import RemoveIcon from './components/RemoveIcon';
+import RedoIcon from './components/RedoIcon';
 
 type Props = {
   files: Array<Object>,
+  multiple: boolean,
   remove: Function,
   removeAll: Function,
   send: Function,
@@ -24,9 +34,16 @@ class Preview extends React.Component<Props, State> {
   }
 
   render() {
-    const { send, remove, photoUri } = this.props;
-    const x = Dimensions.get('window');
-    const { width, height } = x;
+    const {
+      send,
+      remove,
+      files,
+      multiple,
+      removeAll,
+      addPages,
+      redo,
+    } = this.props;
+    const { width, height } = Dimensions.get('window');
     const { currentIndex } = this.state;
     return (
       <View
@@ -34,42 +51,83 @@ class Preview extends React.Component<Props, State> {
           flex: 1,
           backgroundColor: '#1b1922',
           height: '100%',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
         <Carousel
           layout="default"
-          data={[{ uri: photoUri }, { uri: photoUri }]}
+          data={[...files, ...files]}
           onSnapToItem={index =>
             this.setState(() => ({ currentIndex: index }))}
           swipeThreshold={1}
           vertical
           sliderHeight={height}
           itemWidth={width}
-          itemHeight={height * 0.6}
-          containerCustomStyle={{ flex: 9, marginHorizontal: 30 }}
-          sliderWidth={width - 60}
+          itemHeight={height * 0.7}
+          containerCustomStyle={{ flex: 9, marginHorizontal: 10 }}
+          sliderWidth={width}
           renderItem={({ item, index }) => (
-            <Image
+            <ImageBackground
+              imageStyle={{ resizeMode: 'contain' }}
               style={{
                 flex: 1,
-                resizeMode: 'contain',
                 opacity: index === currentIndex ? 1 : 0.5,
               }}
               source={{ uri: item.uri }}
-            />
+            >
+              <IndexNumber value={index + 1} />
+              <RemoveIcon remove={() => remove(index)} />
+              <RedoIcon redo={() => redo(index)} />
+            </ImageBackground>
           )}
         />
-        {/* <View style={{
+        <TouchableOpacity
+          onPress={addPages}
+          style={{
+            height: 70,
+            flex: 1,
+            width: '100%',
+            bottom: 65,
+            position: 'absolute',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#979797',
+              borderRadius: 80,
+              width: 70,
+              height: 70,
+            }}
+          >
+            <Icon
+              name="plus"
+              type="material-community"
+              color="white"
+            />
+            <Text style={{ color: 'white', fontSize: 11 }}>
+              add pages
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={{
           flexDirection: 'row',
+          position: 'absolute',
+          bottom: 20,
+          width: '100%',
           justifyContent: 'space-between',
           flex: 1,
         }}
         >
           <Button
             backgroundColor="transparent"
-            onPress={remove}
-            icon={{ name: 'delete', size: 20 }}
-            title="Delete"
+            onPress={removeAll}
+            icon={{ name: multiple ? 'delete-sweep' : 'delete', size: 20 }}
+            title={multiple ? 'Remove all' : 'Delete'}
             fontSize={18}
             buttonStyle={{ height: 40 }}
           />
@@ -82,7 +140,7 @@ class Preview extends React.Component<Props, State> {
             fontSize={18}
             buttonStyle={{ height: 40 }}
           />
-        </View> */}
+        </View>
       </View>
     );
   }

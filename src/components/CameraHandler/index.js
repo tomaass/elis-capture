@@ -89,9 +89,10 @@ class CameraHandler extends React.Component<Props, State> {
       const newFiles = (typeof redoing === 'number')
         ? set(files, redoing, photo)
         : [...files, photo];
+      const showPreview = typeof redoing === 'number' || files.length === 0;
       this.setState({
         files: newFiles,
-        showPreview: !files.length,
+        showPreview,
         redoing: null,
       });
     }
@@ -99,7 +100,11 @@ class CameraHandler extends React.Component<Props, State> {
 
   remove = (index) => {
     const { files } = this.state;
-    this.setState({ files: files.filter((_, i) => index !== i) });
+    const newFiles = files.filter((_, i) => index !== i);
+    this.setState({
+      files: newFiles,
+      showPreview: newFiles.length !== 0,
+    });
   }
 
   removeAll = () => {
@@ -154,6 +159,7 @@ class CameraHandler extends React.Component<Props, State> {
                 send={this.send}
                 addPages={this.addPages}
                 redo={this.redo}
+                multiple={files.length > 1}
               />
             )
             : (
