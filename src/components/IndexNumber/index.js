@@ -2,9 +2,9 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-type Props = { value: number }
+type Props = { value: number, style?: Object }
 
-const IndexNumber = ({ value }: Props) => (
+const IndexNumber = ({ value, style }: Props) => (
   <Text
     style={{
       color: 'white',
@@ -17,10 +17,15 @@ const IndexNumber = ({ value }: Props) => (
       borderRadius: 40,
       textAlign: 'center',
       fontSize: 20,
+      ...style,
     }}
   >
     {value}
   </Text>
 );
+
+IndexNumber.defaultProps = {
+  style: {},
+};
 
 export default IndexNumber;

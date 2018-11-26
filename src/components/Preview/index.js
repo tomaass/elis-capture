@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
-import IndexNumber from './components/IndexNumber';
+import IndexNumber from '../IndexNumber';
 import RemoveIcon from './components/RemoveIcon';
 import RedoIcon from './components/RedoIcon';
 

@@ -15,6 +15,7 @@ type Props = {
   flashMode: FlashMode,
   pagesCount: number,
   ratio: string,
+  lastFile: ?Object,
   onFlashModeChange: Function,
   onCameraReady: Function,
   getRef: Function,
@@ -38,6 +39,9 @@ const Camera = ({
   onFlashModeChange,
   ratio,
   onCameraReady,
+  pagesCount,
+  lastFile,
+  openPreview,
 }: Props) => (
   <View style={{
     flex: 1,
@@ -66,7 +70,11 @@ const Camera = ({
         marginRight: '10%',
       }}
     >
-      <LeftFooter />
+      <LeftFooter
+        openPreview={openPreview}
+        lastFile={lastFile}
+        pagesCount={pagesCount}
+      />
       <CenterFooter shoot={shoot} />
       <RightFooter
         onFlashModeChange={onFlashModeChange}

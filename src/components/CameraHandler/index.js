@@ -7,7 +7,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
-import { set } from 'lodash';
+import { set, last } from 'lodash';
 import { connect } from 'react-redux';
 import Preview from '../Preview';
 import Camera from '../Camera';
@@ -17,12 +17,6 @@ import { selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import type { Queue } from '../../redux/modules/queues/reducer';
 import { FLASHMODE } from '../../constants/config';
-
-const calcScreenRatio = (naturalRatio, coef = 1) =>
-  (naturalRatio * coef) === Math.floor(naturalRatio * coef)
-    ? `${naturalRatio * coef}:${coef}`
-    : calcScreenRatio(naturalRatio, coef + 1);
-
 
 export type FlashMode = 'auto' | 'on' | 'off';
 
@@ -177,6 +171,8 @@ class CameraHandler extends React.Component<Props, State> {
                 multiple={files.length > 1}
                 send={this.send}
                 pagesCount={files.length}
+                lastFile={last(files)}
+                openPreview={openPreview}
               />
             ) : <NoPermission />
           }
