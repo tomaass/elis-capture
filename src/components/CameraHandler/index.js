@@ -68,17 +68,20 @@ class CameraHandler extends React.Component<Props, State> {
   }
 
   getRatio = async () => {
-    const { width, height } = Dimensions.get('window');
-    const naturalRatio = height / width;
-    const roundedNaturalRatio = Math.round(naturalRatio * 10) / 10;
-    const screenRatio = calcScreenRatio(roundedNaturalRatio);
-
     if (Platform.OS === 'android' && this.camera) {
+      const { width, height } = Dimensions.get('window');
       const ratios = await this.camera.getSupportedRatiosAsync();
-      const bestRatio = ratios.find(ratio => ratio === screenRatio);
-      const commonRatio = ratios.find(ratio => ratio === '4:3');
-      const anyRatio = ratios[ratios.length - 1];
-      this.setState({ ratio: bestRatio || commonRatio || anyRatio });
+      const wantedRatio = height / width;
+      let bestRatio = 0;
+      let bestRatioError = 100000;
+      ratios.forEach((ratio) => {
+        const [x, y] = ratio.split(':');
+        if (Math.abs(wantedRatio - x / y) < bestRatioError) {
+          bestRatioError = Math.abs(wantedRatio - x / y);
+          bestRatio = ratio;
+        }
+      });
+      this.setState({ ratio: bestRatio });
     }
   }
 
