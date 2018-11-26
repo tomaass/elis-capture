@@ -11,7 +11,6 @@ import RightFooter from './component/RightFooter';
 import type { FlashMode } from '../CameraHandler';
 
 type Props = {
-  multiple: boolean,
   flashMode: FlashMode,
   pagesCount: number,
   ratio: string,
@@ -41,6 +40,7 @@ const Camera = ({
   onCameraReady,
   pagesCount,
   lastFile,
+  send,
   openPreview,
 }: Props) => (
   <View style={{
@@ -77,8 +77,10 @@ const Camera = ({
       />
       <CenterFooter shoot={shoot} />
       <RightFooter
+        showSend={!!pagesCount}
         onFlashModeChange={onFlashModeChange}
         flashMode={flashMode}
+        send={send}
       />
     </View>
   </View>

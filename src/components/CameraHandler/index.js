@@ -167,12 +167,10 @@ class CameraHandler extends React.Component<Props, State> {
                 onCameraReady={this.getRatio}
                 getRef={(ref) => { this.camera = ref; }}
                 shoot={this.shoot}
-                openPreview={this.openPreview}
-                multiple={files.length > 1}
                 send={this.send}
                 pagesCount={files.length}
                 lastFile={last(files)}
-                openPreview={openPreview}
+                openPreview={this.openPreview}
               />
             ) : <NoPermission />
           }

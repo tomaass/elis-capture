@@ -57,7 +57,7 @@ class Preview extends React.Component<Props, State> {
       >
         <Carousel
           layout="default"
-          data={[...files, ...files]}
+          data={files}
           onSnapToItem={index =>
             this.setState(() => ({ currentIndex: index }))}
           swipeThreshold={1}

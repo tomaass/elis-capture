@@ -14,10 +14,23 @@ const LeftFooter = ({ lastFile, pagesCount, openPreview }: Props) => (
     {lastFile && (
       <TouchableOpacity
         onPress={openPreview}
-        style={{ width: 30, height: 30 }}
+        style={{ width: 50, height: 50 }}
       >
-        <ImageBackground source={{ uri: lastFile.uri }}>
-          <IndexNumber value={pagesCount} />
+        <ImageBackground
+          style={{ width: 50, height: 50 }}
+          source={{ uri: lastFile.uri }}
+        >
+          <IndexNumber
+            value={pagesCount}
+            style={{
+              zIndex: 1,
+              left: 15,
+              top: 15,
+              width: 20,
+              height: 20,
+              fontSize: 12,
+            }}
+          />
         </ImageBackground>
       </TouchableOpacity>
     )}
