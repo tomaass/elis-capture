@@ -36,7 +36,7 @@ function reducer(state: State = initialState, action: Object) {
     }
 
     case SELECT_QUEUE:
-      return state.set('currentQueueIndex', action.payload.index);
+      return state.set('currentQueueIndex', Number(action.payload.index));
 
     default: {
       return state;

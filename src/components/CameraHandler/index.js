@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { set, last } from 'lodash';
 import { connect } from 'react-redux';
+import LottieView from 'lottie-react-native';
+import loader from '../../images/loader.json';
 import Preview from '../Preview';
 import Camera from '../Camera';
 import NoPermission from '../NoPremission';
@@ -33,6 +35,7 @@ type State = {
   ratio: string,
   showPreview: boolean,
   redoing: ?number,
+  shooting: boolean,
 }
 
 const flashModes: Array<FlashMode> = ['on', 'off', 'auto'];
@@ -49,6 +52,7 @@ class CameraHandler extends React.Component<Props, State> {
       ratio: '4:3',
       showPreview: false,
       redoing: null,
+      shooting: false,
     };
   }
 
@@ -81,6 +85,7 @@ class CameraHandler extends React.Component<Props, State> {
 
   shoot = async () => {
     if (this.camera) {
+      this.setState({ shooting: true });
       const { files, redoing } = this.state;
       const photo = await this.camera.takePictureAsync();
       const newFiles = (typeof redoing === 'number')
@@ -91,6 +96,7 @@ class CameraHandler extends React.Component<Props, State> {
         files: newFiles,
         showPreview,
         redoing: null,
+        shooting: false,
       });
     }
   };
@@ -142,6 +148,7 @@ class CameraHandler extends React.Component<Props, State> {
       files,
       flashMode,
       showPreview,
+      shooting,
     } = this.state;
     const { queues, currentQueueIndex } = this.props;
     return (
@@ -161,6 +168,7 @@ class CameraHandler extends React.Component<Props, State> {
             )
             : (
               <Camera
+                shooting={shooting}
                 onFlashModeChange={this.onFlashModeChange}
                 flashMode={flashMode}
                 ratio={this.state.ratio}
@@ -180,6 +188,25 @@ class CameraHandler extends React.Component<Props, State> {
             currentQueueIndex={currentQueueIndex}
             onQueuePick={this.props.selectQueue}
           />
+        )}
+        {shooting && (
+          <View
+            style={{
+              flex: 1,
+              zIndex: 1,
+              position: 'absolute',
+              left: '30%',
+              top: '30%',
+              width: '40%',
+              height: '40%',
+            }}
+          >
+            <LottieView
+              source={loader}
+              autoPlay
+              loop
+            />
+          </View>
         )}
       </View>
     );
