@@ -8,20 +8,20 @@ import type { Queue } from '../../redux/modules/queues/reducer';
 type Props = {
   queues: Array<Queue>,
   onQueuePick: Function,
+  currentQueueIndex: number,
 }
 
 class QueuePicker extends React.Component<Props> {
   dropdown = null
 
   render() {
-    const { queues, onQueuePick } = this.props;
+    const { queues, onQueuePick, currentQueueIndex } = this.props;
     return (
       <View
         style={{
           flex: 1,
           height: 50,
           right: 5,
-          top: 20,
           width: '30%',
           position: 'absolute',
           flexDirection: 'row',
@@ -31,8 +31,8 @@ class QueuePicker extends React.Component<Props> {
       >
         <Dropdown
           options={queues.map(({ name }) => name)}
-          defaultIndex={0}
-          defaultValue={queues[0].name}
+          defaultIndex={currentQueueIndex}
+          defaultValue={queues[currentQueueIndex].name}
           ref={(ref) => { this.dropdown = ref; }}
           onSelect={index => onQueuePick(index)}
           renderSeparator={() => null}

@@ -26,9 +26,12 @@ const initialState: State = Immutable({
 function reducer(state: State = initialState, action: Object) {
   switch (action.type) {
     case FETCH_QUEUES_FULFILLED: {
-      const { results } = action.payload;
+      const {
+        payload: { results },
+        meta: { currentQueueIndex },
+      } = action;
       return state
-        .set('currentQueueIndex', 0)
+        .set('currentQueueIndex', Number(currentQueueIndex) || 0)
         .set('queues', results);
     }
 

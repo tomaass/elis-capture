@@ -12,7 +12,7 @@ import { AsyncStorage } from 'react-native';
 import { combineEpics, ofType } from 'redux-observable';
 import { changeRoute } from '../route/actions';
 import { fetchQueues } from '../queues/actions';
-import { apiUrl } from '../../../constants/config';
+import { apiUrl, TOKEN } from '../../../constants/config';
 
 const loginUrl = `${apiUrl}/auth/login`;
 const settings = {
@@ -67,7 +67,7 @@ const storeTokenEpic = action$ =>
     ofType(STORE_TOKEN),
     pluck('payload', 'token'),
     mergeMap((token: string) =>
-      from(AsyncStorage.setItem('TOKEN', token))),
+      from(AsyncStorage.setItem(TOKEN, token))),
     map(loginUserFulfilled),
   );
 
