@@ -5,9 +5,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import CenterFooter from './component/CenterFooter';
-import LeftFooter from './component/LeftFooter';
-import RightFooter from './component/RightFooter';
+import CameraFooter from '../CameraFooter';
 import type { FlashMode } from '../CameraHandler';
 
 type Props = {
@@ -59,30 +57,15 @@ const Camera = ({
       ratio={ratio}
       onCameraReady={onCameraReady}
     />
-    <View
-      style={{
-        position: 'absolute',
-        flex: 1,
-        bottom: 30,
-        flexDirection: 'row',
-        width: '80%',
-        marginLeft: '10%',
-        marginRight: '10%',
-      }}
-    >
-      <LeftFooter
-        openPreview={openPreview}
-        lastFile={lastFile}
-        pagesCount={pagesCount}
-      />
-      <CenterFooter shoot={shoot} />
-      <RightFooter
-        showSend={!!pagesCount}
-        onFlashModeChange={onFlashModeChange}
-        flashMode={flashMode}
-        send={send}
-      />
-    </View>
+    <CameraFooter
+      openPreview={openPreview}
+      lastFile={lastFile}
+      pagesCount={pagesCount}
+      shoot={shoot}
+      onFlashModeChange={onFlashModeChange}
+      flashMode={flashMode}
+      send={send}
+    />
   </View>
 );
 

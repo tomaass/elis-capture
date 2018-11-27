@@ -9,8 +9,7 @@ import {
 } from 'react-native';
 import { set, last } from 'lodash';
 import { connect } from 'react-redux';
-import LottieView from 'lottie-react-native';
-import loader from '../../images/loader.json';
+import PhotoLoader from '../PhotoLoader';
 import Preview from '../Preview';
 import Camera from '../Camera';
 import NoPermission from '../NoPremission';
@@ -56,18 +55,25 @@ class CameraHandler extends React.Component<Props, State> {
     };
   }
 
-  async componentDidMount() {
+  componentWillMount() {
+    this.loadFlashmodeSettings();
+    this.requestPermission();
+  }
+
+  loadFlashmodeSettings = async () => {
     const flashMode = await AsyncStorage.getItem(FLASHMODE) || 'auto';
+    this.setState({ flashMode });
+  }
+
+  requestPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({
-      permissionsGranted: status === 'granted',
-      flashMode,
-    });
+    this.setState({ permissionsGranted: status === 'granted' });
   }
 
   getRatio = async () => {
     if (Platform.OS === 'android' && this.camera) {
       const { width, height } = Dimensions.get('window');
+      // $FlowFixMe
       const ratios = await this.camera.getSupportedRatiosAsync();
       const wantedRatio = height / width;
       let bestRatio = 0;
@@ -79,7 +85,11 @@ class CameraHandler extends React.Component<Props, State> {
           bestRatio = ratio;
         }
       });
-      this.setState({ ratio: bestRatio });
+      this.setState({
+        ratio: (typeof bestRatio === 'number')
+          ? '16:9'
+          : bestRatio,
+      });
     }
   }
 
@@ -87,6 +97,7 @@ class CameraHandler extends React.Component<Props, State> {
     if (this.camera) {
       this.setState({ shooting: true });
       const { files, redoing } = this.state;
+      // $FlowFixMe
       const photo = await this.camera.takePictureAsync();
       const newFiles = (typeof redoing === 'number')
         ? set(files, redoing, photo)
@@ -180,7 +191,7 @@ class CameraHandler extends React.Component<Props, State> {
                 lastFile={last(files)}
                 openPreview={this.openPreview}
               />
-            ) : <NoPermission />
+            ) : <NoPermission requestPermission={this.requestPermission} />
           }
         {!!queues.length && (
           <QueuePicker
@@ -189,25 +200,7 @@ class CameraHandler extends React.Component<Props, State> {
             onQueuePick={this.props.selectQueue}
           />
         )}
-        {shooting && (
-          <View
-            style={{
-              flex: 1,
-              zIndex: 1,
-              position: 'absolute',
-              left: '30%',
-              top: '30%',
-              width: '40%',
-              height: '40%',
-            }}
-          >
-            <LottieView
-              source={loader}
-              autoPlay
-              loop
-            />
-          </View>
-        )}
+        {shooting && <PhotoLoader />}
       </View>
     );
   }
