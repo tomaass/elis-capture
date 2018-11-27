@@ -1,0 +1,27 @@
+/* @flow */
+import React from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
+
+type Props = { remove: Function }
+
+const RemoveIcon = ({ remove }: Props) => (
+  <TouchableOpacity
+    onPress={remove}
+    style={{
+      position: 'absolute',
+      right: 50,
+      top: 10,
+      width: 30,
+      height: 30,
+    }}
+  >
+    <Icon
+      name="delete"
+      color="white"
+      size={30}
+    />
+  </TouchableOpacity>
+);
+
+export default RemoveIcon;

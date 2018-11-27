@@ -1,53 +1,73 @@
 /* @flow */
 import React from 'react';
-import { View, ImageBackground } from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, Dimensions, StyleSheet } from 'react-native';
+import PreviewFooter from '../PreviewFooter';
+import PreviewPages from '../PreviewPages';
+import AddPagesButton from './components/AddPagesButton';
 
 type Props = {
-  send: Function,
+  files: Array<Object>,
+  multiple: boolean,
   remove: Function,
-  photoUri: string,
+  removeAll: Function,
+  send: Function,
+  addPages: Function,
+  redo: Function,
 }
 
-const Preview = ({ send, remove, photoUri }: Props) => (
-  <View style={{ flex: 1, backgroundColor: '#1b1922' }}>
-    <View style={{
-      margin: '10%',
-      marginTop: '25%',
-      flex: 9,
-      marginBottom: 0,
-    }}
-    >
-      <ImageBackground
-        style={{ flex: 1 }}
-        source={{ uri: photoUri }}
-      />
-    </View>
-    <View style={{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flex: 1,
-    }}
-    >
-      <Button
-        backgroundColor="transparent"
-        onPress={remove}
-        icon={{ name: 'delete', size: 20 }}
-        title="Delete"
-        fontSize={18}
-        buttonStyle={{ height: 40 }}
-      />
-      <Button
-        onPress={send}
-        borderRadius={10}
-        backgroundColor="#2f72ff"
-        icon={{ name: 'send', size: 20 }}
-        title="Send"
-        fontSize={18}
-        buttonStyle={{ height: 40 }}
-      />
-    </View>
-  </View>
-);
+type State = {
+  currentIndex: number,
+}
+
+class Preview extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { currentIndex: 0 };
+  }
+
+  render() {
+    const {
+      send,
+      remove,
+      files,
+      multiple,
+      removeAll,
+      addPages,
+      redo,
+    } = this.props;
+    const { width, height } = Dimensions.get('window');
+    const { currentIndex } = this.state;
+    return (
+      <View style={styles.Preview}>
+        <PreviewPages
+          height={height}
+          width={width}
+          remove={remove}
+          redo={redo}
+          currentPageIndex={currentIndex}
+          pages={files}
+          onPageChange={index =>
+            this.setState(() => ({ currentIndex: index }))}
+        />
+        <AddPagesButton onPress={addPages} />
+        <PreviewFooter
+          multiple={multiple}
+          removeAll={removeAll}
+          send={send}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  Preview: {
+    flex: 1,
+    backgroundColor: '#1b1922',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+});
 
 export default Preview;

@@ -5,16 +5,20 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import CenterFooter from './component/CenterFooter';
-import LeftFooter from './component/LeftFooter';
-import RightFooter from './component/RightFooter';
+import CameraFooter from '../CameraFooter';
 import type { FlashMode } from '../CameraHandler';
 
 type Props = {
-  shoot: Function,
-  getRef: Function,
-  onFlashModeChange: Function,
   flashMode: FlashMode,
+  pagesCount: number,
+  ratio: string,
+  lastFile: ?Object,
+  onFlashModeChange: Function,
+  onCameraReady: Function,
+  getRef: Function,
+  shoot: Function,
+  openPreview: Function,
+  send: Function,
 }
 
 const styles = StyleSheet.create({
@@ -30,6 +34,12 @@ const Camera = ({
   shoot,
   flashMode,
   onFlashModeChange,
+  ratio,
+  onCameraReady,
+  pagesCount,
+  lastFile,
+  send,
+  openPreview,
 }: Props) => (
   <View style={{
     flex: 1,
@@ -44,25 +54,18 @@ const Camera = ({
       flashMode={RNCamera.Constants.FlashMode[flashMode]}
       permissionDialogMessage="Ukážeš mi jí?"
       ref={getRef}
+      ratio={ratio}
+      onCameraReady={onCameraReady}
     />
-    <View
-      style={{
-        position: 'absolute',
-        flex: 1,
-        bottom: 30,
-        flexDirection: 'row',
-        width: '80%',
-        marginLeft: '10%',
-        marginRight: '10%',
-      }}
-    >
-      <LeftFooter />
-      <CenterFooter shoot={shoot} />
-      <RightFooter
-        onFlashModeChange={onFlashModeChange}
-        flashMode={flashMode}
-      />
-    </View>
+    <CameraFooter
+      openPreview={openPreview}
+      lastFile={lastFile}
+      pagesCount={pagesCount}
+      shoot={shoot}
+      onFlashModeChange={onFlashModeChange}
+      flashMode={flashMode}
+      send={send}
+    />
   </View>
 );
 
