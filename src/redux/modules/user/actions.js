@@ -1,5 +1,4 @@
 /* @flow */
-import { identity, negate } from 'lodash';
 import { from, of as _of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
@@ -7,12 +6,17 @@ import {
   pluck,
   map,
   filter,
+  catchError,
 } from 'rxjs/operators';
 import { AsyncStorage } from 'react-native';
 import { combineEpics, ofType } from 'redux-observable';
 import { changeRoute } from '../route/actions';
+import { displayMessage } from '../messages/actions';
 import { fetchQueues } from '../queues/actions';
-import { apiUrl } from '../../../constants/config';
+import { apiUrl, TOKEN } from '../../../constants/config';
+
+type CredentialsBody = { username: string, password: string };
+opaque type Token = string;
 
 const loginUrl = `${apiUrl}/auth/login`;
 const settings = {
@@ -22,58 +26,53 @@ const settings = {
 
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGIN_USER_FULFILLED = 'LOGIN_USER_FULFILLED';
-export const STORE_TOKEN = 'STORE_TOKEN';
+export const VALIDATE_CREDENTIALS = 'VALIDATE_CREDENTIALS';
+export const VALIDATE_CREDENTIALS_FULFILLED = 'VALIDATE_CREDENTIALS_FULFILLED';
 
-type loginUserPayload = { username: string, password: string };
-export const loginUser = (payload: loginUserPayload) => ({
+export const loginUser = (body: CredentialsBody) => ({
   type: LOGIN_USER,
-  payload,
+  payload: body,
 });
 
-export const loginUserFulfilled = () => ({
+export const loginUserFulfilled = (token: Token) => ({
   type: LOGIN_USER_FULFILLED,
+  payload: token,
 });
 
-export const storeToken = (token: string) => ({
-  type: STORE_TOKEN,
-  payload: { token },
+export const validateCredentials = (body: CredentialsBody) => ({
+  type: VALIDATE_CREDENTIALS,
+  payload: body,
 });
 
-const loginUserEpic = action$ =>
+
+const authentificationEpic = action$ =>
   action$.pipe(
     ofType(LOGIN_USER),
     pluck('payload'),
     mergeMap(body =>
-      from(AsyncStorage.getItem('TOKEN'))
-        .pipe(
-          filter(negate(identity)),
-          mergeMap(() => ajax.post(loginUrl, body, settings)),
-        )),
-    map(({ response: { key } }) => storeToken(key)),
+      from(AsyncStorage.getItem('TOKEN')).pipe(
+        map(token => ({ token, body })),
+      )),
+    filter(({ token, body }) => token || body),
+    map(({ token, body }) => token
+      ? loginUserFulfilled(token)
+      : validateCredentials(body)),
   );
-
-
-const loggedInUserEpic = action$ =>
+const validateCredentialsEpic = action$ =>
   action$.pipe(
-    ofType(LOGIN_USER),
-    mergeMap(() =>
-      from(AsyncStorage.getItem('TOKEN'))
-        .pipe(filter(identity))),
-    map(loginUserFulfilled),
-  );
-
-const storeTokenEpic = action$ =>
-  action$.pipe(
-    ofType(STORE_TOKEN),
-    pluck('payload', 'token'),
-    mergeMap((token: string) =>
-      from(AsyncStorage.setItem('TOKEN', token))),
-    map(loginUserFulfilled),
+    ofType(VALIDATE_CREDENTIALS),
+    pluck('payload'),
+    mergeMap(body => ajax.post(loginUrl, body, settings).pipe(
+      map(({ response: { key } }) => loginUserFulfilled(key)),
+      catchError(() => _of(displayMessage('Incorrect credentials provided'))),
+    )),
   );
 
 const loginUserFulfilledEpic = action$ =>
   action$.pipe(
     ofType(LOGIN_USER_FULFILLED),
+    pluck('payload'),
+    mergeMap(token => AsyncStorage.setItem(TOKEN, token)),
     mergeMap(() => _of(
       changeRoute('/camera'),
       fetchQueues(),
@@ -81,8 +80,7 @@ const loginUserFulfilledEpic = action$ =>
   );
 
 export default combineEpics(
-  loginUserEpic,
-  storeTokenEpic,
-  loggedInUserEpic,
+  authentificationEpic,
+  validateCredentialsEpic,
   loginUserFulfilledEpic,
 );

@@ -1,7 +1,7 @@
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'remote-redux-devtools';
 import userEpic from './modules/user/actions';
+import messagesReducer from './modules/messages/reducer';
 import documentsEpic from './modules/documents/actions';
 import queuesEpic from './modules/queues/actions';
 import userReducer from './modules/user/reducer';
@@ -10,18 +10,21 @@ import routeReducer from './modules/route/reducer';
 
 const reducers = {
   user: userReducer,
+  messages: messagesReducer,
   route: routeReducer,
   queues: queuesReducer,
 };
-const epics = combineEpics(userEpic, queuesEpic, documentsEpic);
+const epics = combineEpics(
+  userEpic,
+  queuesEpic,
+  documentsEpic,
+);
 
 const epicMiddleware = createEpicMiddleware();
 
-const composeEnhancers = composeWithDevTools({ realtime: true });
-
 const store = createStore(
   combineReducers(reducers),
-  composeEnhancers(applyMiddleware(epicMiddleware)),
+  applyMiddleware(epicMiddleware),
 );
 
 epicMiddleware.run(epics);
