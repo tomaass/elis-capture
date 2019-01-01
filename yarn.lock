@@ -6239,9 +6239,9 @@ react-native-root-siblings@^3.0.0:
     prop-types "^15.6.2"
     static-container "^1.0.0"
 
-react-native-root-toast@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-root-toast/-/react-native-root-toast-3.0.1.tgz#ad0a37c46bc72971a229c7784df25147004e5538"
+react-native-root-toast@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-root-toast/-/react-native-root-toast-3.0.2.tgz#85c0c50d300c895a35ea98587b4ad4c9540297ee"
   dependencies:
     prop-types "^15.5.10"
     react-native-root-siblings "^3.0.0"
