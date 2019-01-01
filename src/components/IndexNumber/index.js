@@ -1,31 +1,39 @@
 /* @flow */
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
-type Props = { value: number, style?: Object }
+type Props = {
+  value: number,
+  style?: Object,
+  textStyle?: Object,
+}
 
-const IndexNumber = ({ value, style }: Props) => (
-  <Text
+const IndexNumber = ({ value, style, textStyle }: Props) => (
+  <View
     style={{
-      color: 'white',
-      position: 'absolute',
-      left: 50,
-      top: 10,
       backgroundColor: '#2f72ff',
       width: 30,
       height: 30,
       borderRadius: 40,
-      textAlign: 'center',
-      fontSize: 20,
       ...style,
     }}
   >
-    {value}
-  </Text>
+    <Text
+      style={{
+        fontSize: 20,
+        color: 'white',
+        textAlign: 'center',
+        ...textStyle,
+      }}
+    >
+      {value}
+    </Text>
+  </View>
 );
 
 IndexNumber.defaultProps = {
   style: {},
+  textStyle: {},
 };
 
 export default IndexNumber;

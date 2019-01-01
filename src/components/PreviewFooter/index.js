@@ -17,10 +17,11 @@ const PreviewFooter = ({
   <View style={{
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 20,
+    bottom: 30,
     width: '100%',
     justifyContent: 'space-between',
     flex: 1,
+    paddingBottom: 10,
   }}
   >
     <Button
@@ -29,7 +30,7 @@ const PreviewFooter = ({
       icon={{ name: multiple ? 'delete-sweep' : 'delete', size: 20 }}
       title={multiple ? 'Remove all' : 'Delete'}
       fontSize={18}
-      buttonStyle={{ height: 40 }}
+      buttonStyle={{ height: 42 }}
     />
     <Button
       onPress={send}
@@ -38,7 +39,7 @@ const PreviewFooter = ({
       icon={{ name: 'send', size: 20 }}
       title="Send"
       fontSize={18}
-      buttonStyle={{ height: 40 }}
+      buttonStyle={{ height: 42 }}
     />
   </View>
 );

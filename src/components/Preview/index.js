@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import {
+  View, StyleSheet,
+} from 'react-native';
 import PreviewFooter from '../PreviewFooter';
 import PreviewPages from '../PreviewPages';
 import AddPagesButton from './components/AddPagesButton';
@@ -15,50 +17,29 @@ type Props = {
   redo: Function,
 }
 
-type State = {
-  currentIndex: number,
-}
-
-class Preview extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { currentIndex: 0 };
-  }
-
-  render() {
-    const {
-      send,
-      remove,
-      files,
-      multiple,
-      removeAll,
-      addPages,
-      redo,
-    } = this.props;
-    const { width, height } = Dimensions.get('window');
-    const { currentIndex } = this.state;
-    return (
-      <View style={styles.Preview}>
-        <PreviewPages
-          height={height}
-          width={width}
-          remove={remove}
-          redo={redo}
-          currentPageIndex={currentIndex}
-          pages={files}
-          onPageChange={index =>
-            this.setState(() => ({ currentIndex: index }))}
-        />
-        <AddPagesButton onPress={addPages} />
-        <PreviewFooter
-          multiple={multiple}
-          removeAll={removeAll}
-          send={send}
-        />
-      </View>
-    );
-  }
-}
+const Preview = ({
+  send,
+  remove,
+  files,
+  multiple,
+  removeAll,
+  addPages,
+  redo,
+}: Props) => (
+  <View style={styles.Preview}>
+    <PreviewPages
+      remove={remove}
+      redo={redo}
+      pages={files}
+    />
+    <AddPagesButton onPress={addPages} />
+    <PreviewFooter
+      multiple={multiple}
+      removeAll={removeAll}
+      send={send}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   Preview: {

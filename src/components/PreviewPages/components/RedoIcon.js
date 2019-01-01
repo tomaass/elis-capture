@@ -9,9 +9,7 @@ const RedoIcon = ({ redo }: Props) => (
   <TouchableOpacity
     onPress={redo}
     style={{
-      position: 'absolute',
-      right: 100,
-      top: 10,
+      marginLeft: 10,
       width: 30,
       height: 30,
     }}

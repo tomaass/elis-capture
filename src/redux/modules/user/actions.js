@@ -7,10 +7,12 @@ import {
   pluck,
   map,
   filter,
+  catchError,
 } from 'rxjs/operators';
 import { AsyncStorage } from 'react-native';
 import { combineEpics, ofType } from 'redux-observable';
 import { changeRoute } from '../route/actions';
+import makeMessage from '../messages/actions';
 import { fetchQueues } from '../queues/actions';
 import { apiUrl, TOKEN } from '../../../constants/config';
 
@@ -47,8 +49,10 @@ const loginUserEpic = action$ =>
       from(AsyncStorage.getItem('TOKEN'))
         .pipe(
           filter(negate(identity)),
+          filter(() => body),
           mergeMap(() => ajax.post(loginUrl, body, settings)),
         )),
+    catchError(() => makeMessage('Incorrect credentials provided')),
     map(({ response: { key } }) => storeToken(key)),
   );
 

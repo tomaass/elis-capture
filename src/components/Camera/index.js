@@ -13,6 +13,7 @@ type Props = {
   pagesCount: number,
   ratio: string,
   lastFile: ?Object,
+  shooting: boolean,
   onFlashModeChange: Function,
   onCameraReady: Function,
   getRef: Function,
@@ -39,6 +40,7 @@ const Camera = ({
   pagesCount,
   lastFile,
   send,
+  shooting,
   openPreview,
 }: Props) => (
   <View style={{
@@ -52,7 +54,8 @@ const Camera = ({
       style={styles.camera}
       type={RNCamera.Constants.Type.back}
       flashMode={RNCamera.Constants.FlashMode[flashMode]}
-      permissionDialogMessage="Ukážeš mi jí?"
+      permissionDialogMessage="We need your access your camera, so you can take photos of your invoices."
+      permissionDialogTitle="Permission to use camera"
       ref={getRef}
       ratio={ratio}
       onCameraReady={onCameraReady}
@@ -60,6 +63,7 @@ const Camera = ({
     <CameraFooter
       openPreview={openPreview}
       lastFile={lastFile}
+      shooting={shooting}
       pagesCount={pagesCount}
       shoot={shoot}
       onFlashModeChange={onFlashModeChange}

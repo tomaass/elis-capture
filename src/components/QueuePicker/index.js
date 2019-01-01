@@ -22,7 +22,7 @@ class QueuePicker extends React.Component<Props> {
           flex: 1,
           height: 50,
           right: 5,
-          width: '30%',
+          width: '50%',
           position: 'absolute',
           flexDirection: 'row',
           alignItems: 'center',
@@ -55,7 +55,7 @@ class QueuePicker extends React.Component<Props> {
           dropdownTextHighlightStyle={{ color: 'white' }}
           dropdownStyle={{
             height: '50%',
-            width: '30%',
+            width: '50%',
             backgroundColor: 'transparent',
             borderWidth: 0,
           }}

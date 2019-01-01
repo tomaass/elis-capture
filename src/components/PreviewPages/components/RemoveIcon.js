@@ -9,9 +9,7 @@ const RemoveIcon = ({ remove }: Props) => (
   <TouchableOpacity
     onPress={remove}
     style={{
-      position: 'absolute',
-      right: 50,
-      top: 10,
+      marginLeft: 10,
       width: 30,
       height: 30,
     }}

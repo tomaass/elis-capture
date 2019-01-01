@@ -10,6 +10,7 @@ type Props = {
   lastFile: ?Object,
   pagesCount: number,
   flashMode: FlashMode,
+  shooting: boolean,
   openPreview: Function,
   onFlashModeChange: Function,
   shoot: Function,
@@ -23,6 +24,7 @@ const CameraFooter = ({
   shoot,
   onFlashModeChange,
   flashMode,
+  shooting,
   send,
 }: Props) => (
   <View
@@ -39,6 +41,7 @@ const CameraFooter = ({
     <LeftFooter
       openPreview={openPreview}
       lastFile={lastFile}
+      shooting={shooting}
       pagesCount={pagesCount}
     />
     <CenterFooter shoot={shoot} />

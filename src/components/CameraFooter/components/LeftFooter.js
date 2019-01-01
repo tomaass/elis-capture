@@ -6,13 +6,20 @@ import IndexNumber from '../../IndexNumber';
 type Props = {
   lastFile: ?Object,
   pagesCount: number,
+  shooting: boolean,
   openPreview: Function,
 }
 
-const LeftFooter = ({ lastFile, pagesCount, openPreview }: Props) => (
+const LeftFooter = ({
+  lastFile,
+  pagesCount,
+  openPreview,
+  shooting,
+}: Props) => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
     {lastFile && (
       <TouchableOpacity
+        disabled={shooting}
         onPress={openPreview}
         style={{ width: 50, height: 50 }}
       >
@@ -28,8 +35,8 @@ const LeftFooter = ({ lastFile, pagesCount, openPreview }: Props) => (
               top: 15,
               width: 20,
               height: 20,
-              fontSize: 12,
             }}
+            textStyle={{ fontSize: 15 }}
           />
         </ImageBackground>
       </TouchableOpacity>
