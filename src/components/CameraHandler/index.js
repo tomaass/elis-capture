@@ -13,7 +13,7 @@ import PhotoLoader from '../PhotoLoader';
 import Preview from '../Preview';
 import Camera from '../Camera';
 import NoPermission from '../NoPremission';
-import { uploadDocument } from '../../redux/modules/documents/actions';
+import { uploadDocuments } from '../../redux/modules/documents/actions';
 import { selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import type { Queue } from '../../redux/modules/queues/reducer';
@@ -207,7 +207,7 @@ class CameraHandler extends React.Component<Props, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  send: (...args) => dispatch(uploadDocument(...args)),
+  send: (...args) => dispatch(uploadDocuments(...args)),
   selectQueue: (...args) => dispatch(selectQueue(...args)),
 });
 
