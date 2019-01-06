@@ -31,8 +31,8 @@ const Preview = ({
       remove={remove}
       redo={redo}
       pages={files}
+      addPages={addPages}
     />
-    <AddPagesButton onPress={addPages} />
     <PreviewFooter
       multiple={multiple}
       removeAll={removeAll}
