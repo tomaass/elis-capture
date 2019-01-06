@@ -1,7 +1,10 @@
-import { from, zip } from 'rxjs';
-import { map, mergeMap, pluck } from 'rxjs/operators';
+import { from, zip, of as _of } from 'rxjs';
+import {
+  map, mergeMap, pluck, catchError,
+} from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 import { AsyncStorage } from 'react-native';
+import { displayMessage } from '../messages/actions';
 import { authGetJSON } from '../../../lib/api';
 import { apiUrl, QUEUE } from '../../../constants/config';
 
@@ -35,9 +38,11 @@ const fetchQueuesEpic = action$ =>
     mergeMap(() => zip(
       authGetJSON(`${apiUrl}/queues`),
       AsyncStorage.getItem(QUEUE),
+    ).pipe(
+      map(([response, currentQueueIndex]) =>
+        fetchQueuesFulfilled(response, { currentQueueIndex })),
+      catchError(() => _of(displayMessage('Queues failed to fetch'))),
     )),
-    map(([response, currentQueueIndex]) =>
-      fetchQueuesFulfilled(response, { currentQueueIndex })),
   );
 
 const selectQueueEpic = action$ =>

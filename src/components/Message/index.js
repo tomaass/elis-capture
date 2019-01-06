@@ -1,21 +1,35 @@
 /* @flow */
 import React from 'react';
 import { connect } from 'react-redux';
-import Toast from 'react-native-root-toast';
+import { View, Text } from 'react-native';
 import type { Message as Props } from '../../redux/modules/messages/reducer';
 
 
-// TODO: Doesn't work. Why?
-const Message = ({ show, text }: Props) => (
-  <Toast
-    visible={show}
-    position={20}
-    shadow={false}
-    animation={false}
-    hideOnPress
+const Message = ({ show, text }: Props) => show && (
+<View style={{
+  width: '100%',
+  height: '50%',
+  position: 'absolute',
+  zIndex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  top: 0,
+}}
+>
+  <View style={{
+    zIndex: 2,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'black',
+    opacity: 0.9,
+  }}
   >
-    {text}
-  </Toast>
+    <Text style={{ color: 'white' }}>
+      {text}
+    </Text>
+  </View>
+</View>
+
 );
 
 const mapStateToProps = state => state.messages;
