@@ -7,9 +7,11 @@ import queuesEpic from './modules/queues/actions';
 import userReducer from './modules/user/reducer';
 import queuesReducer from './modules/queues/reducer';
 import routeReducer from './modules/route/reducer';
+import documentsReducer from './modules/documents/reducer';
 
 const reducers = {
   user: userReducer,
+  documents: documentsReducer,
   messages: messagesReducer,
   route: routeReducer,
   queues: queuesReducer,

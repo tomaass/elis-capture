@@ -18,7 +18,6 @@ import store from './src/redux/configureStore';
 import Routing from './src/decorators/routing';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT);
-AsyncStorage.clear();
 
 const App = () => (
   <Provider store={store}>
