@@ -9,10 +9,12 @@ import userEpic from './modules/user/actions';
 import messagesReducer from './modules/messages/reducer';
 import queuesReducer from './modules/queues/reducer';
 import routeReducer from './modules/route/reducer';
+import documentsReducer from './modules/documents/reducer';
 import userReducer from './modules/user/reducer';
 
 const reducers = {
   user: userReducer,
+  documents: documentsReducer,
   messages: messagesReducer,
   route: routeReducer,
   queues: queuesReducer,
