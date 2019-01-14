@@ -6,6 +6,7 @@ import {
   View,
   Image,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { loginUser } from '../../redux/modules/user/actions';
@@ -54,7 +55,7 @@ class Login extends React.Component<Props, State> {
     const { username, password, keyboardIsOpen } = this.state;
     const { login } = this.props;
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={{
           flex: keyboardIsOpen ? 0.5 : 2,
           flexDirection: 'column',
@@ -62,7 +63,7 @@ class Login extends React.Component<Props, State> {
           justifyContent: 'flex-end',
         }}
         >
-          <Image source={logo} style={{ width: 70, height: 70 }} />
+          {keyboardIsOpen || <Image source={logo} style={{ width: 70, height: 70 }} />}
           <View style={{
             flexDirection: 'column',
             alignItems: 'center',
@@ -103,7 +104,7 @@ class Login extends React.Component<Props, State> {
           onUsernameChange={value =>
             this.setState({ username: value })}
         />
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
