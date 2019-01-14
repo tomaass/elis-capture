@@ -14,6 +14,8 @@ Mobile app, that let's you upload your documents to [Elis](https://rossum.ai/dat
 
 ## TODO:
 * [x] - Refactor auth
-* [ ] - Fix messages
-* [ ] - Redesign preview up to latest [design](https://app.zeplin.io/project/5b1682fc37b0c8a45f679b33/screen/5c1cbba8839feeaf105cecc4)
-* [ ] - Implement upload of multiple pages (Waiting for Backend)
+* [x] - Fix messages
+* [x] - Redesign preview up to latest [design](https://app.zeplin.io/project/5b1682fc37b0c8a45f679b33/screen/5c1cbba8839feeaf105cecc4)
+* [x] - Implement upload of multiple pages
+* [ ] - Fix platform dependant issues
+* [ ] - Fix screen dependant issues

@@ -17,7 +17,7 @@ const PreviewFooter = ({
   <View style={{
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 30,
+    bottom: 10,
     width: '100%',
     justifyContent: 'space-between',
     flex: 1,
@@ -28,7 +28,7 @@ const PreviewFooter = ({
       backgroundColor="transparent"
       onPress={removeAll}
       icon={{ name: multiple ? 'delete-sweep' : 'delete', size: 20 }}
-      title={multiple ? 'Remove all' : 'Delete'}
+      title={multiple ? 'All' : 'Delete'}
       fontSize={18}
       buttonStyle={{ height: 42 }}
     />
