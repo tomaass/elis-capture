@@ -1,11 +1,14 @@
-import { from, zip, of as _of } from 'rxjs';
+import { from } from 'rxjs';
 import {
-  map, mergeMap, pluck, catchError,
+  map,
+  mergeMap,
+  pluck,
+  catchError,
+  zip,
 } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 import { AsyncStorage } from 'react-native';
-import { displayMessage } from '../messages/actions';
-import { authGetJSON } from '../../../lib/api';
+import { authGetJSON, errorHandler } from '../../../lib/api';
 import { apiUrl, QUEUE } from '../../../constants/config';
 
 export const FETCH_QUEUES = 'FETCH_QUEUES';
@@ -35,14 +38,13 @@ export const fetchQueuesFulfilled = (payload, meta) => ({
 const fetchQueuesEpic = action$ =>
   action$.pipe(
     ofType(FETCH_QUEUES),
-    mergeMap(() => zip(
-      authGetJSON(`${apiUrl}/queues`),
-      AsyncStorage.getItem(QUEUE),
-    ).pipe(
-      map(([response, currentQueueIndex]) =>
-        fetchQueuesFulfilled(response, { currentQueueIndex })),
-      catchError(() => _of(displayMessage('Queues failed to fetch'))),
-    )),
+    zip(
+      authGetJSON(`${apiUrl}/queues?pageSize=10&page=1`),
+      from(AsyncStorage.getItem(QUEUE)),
+    ),
+    map(([, response, currentQueueIndex]) =>
+      fetchQueuesFulfilled(response, { currentQueueIndex })),
+    catchError(errorHandler),
   );
 
 const selectQueueEpic = action$ =>

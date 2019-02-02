@@ -1,9 +1,11 @@
 /* @flow */
 import { AsyncStorage } from 'react-native';
-import { from } from 'rxjs';
+import { from, of as _of } from 'rxjs';
 import { pickBy, identity } from 'lodash';
 import { ajax } from 'rxjs/ajax';
 import { mergeMap, first } from 'rxjs/operators';
+import { logoutUser } from '../redux/modules/user/actions';
+import { displayMessage } from '../redux/modules/messages/actions';
 import { TOKEN } from '../constants/config';
 
 const authDefaultSettings = (token: string, settings: HeadersInit = {}) => pickBy({
@@ -23,3 +25,13 @@ export const authPost = (url: string, body: any, settings: HeadersInit) =>
 export const authGetJSON = (url: string, settings: HeadersInit) =>
   withToken((token: string) =>
     ajax.getJSON(url, authDefaultSettings(token, settings)));
+
+export const errorHandler = (request) => {
+  switch (request.status) {
+    case 401: return _of(
+      logoutUser(),
+      displayMessage('You are no logner logged in'),
+    );
+    default: return _of(displayMessage('Terrible error occurred'));
+  }
+};

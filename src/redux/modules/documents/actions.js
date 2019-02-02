@@ -1,10 +1,11 @@
 import {
-  pluck, map, mergeMap, catchError,
+  pluck,
+  map,
+  mergeMap,
+  catchError,
 } from 'rxjs/operators';
-import { of as _of } from 'rxjs';
 import { combineEpics, ofType } from 'redux-observable';
-import { displayMessage } from '../messages/actions';
-import { authPost } from '../../../lib/api';
+import { authPost, errorHandler } from '../../../lib/api';
 
 export const UPLOAD_DOCUMENTS = 'UPLOAD_DOCUMENTS';
 export const UPLOAD_DOCUMENTS_FULFILLED = 'UPLOAD_DOCUMENTS_FULFILLED';
@@ -38,7 +39,7 @@ const uploadDocumentsEpic = (action$, state) =>
     mergeMap(([url, data]) =>
       authPost(`${url}/upload?join=true`, data, { 'Content-Type': undefined }).pipe(
         map(uploadDocumentsFulffilled),
-        catchError(() => _of(displayMessage('Recent document upload failed.'))),
+        catchError(errorHandler),
       )),
   );
 
