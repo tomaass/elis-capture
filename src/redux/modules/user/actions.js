@@ -3,6 +3,7 @@ import { from, of as _of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   mergeMap,
+  tap,
   pluck,
   map,
   filter,
@@ -55,6 +56,7 @@ const authentificationEpic = action$ =>
     pluck('payload'),
     mergeMap(body =>
       from(AsyncStorage.getItem('TOKEN')).pipe(
+        tap(token => console.log('token', token, body)),
         map(token => ({ token, body })),
       )),
     filter(({ token, body }) => token || body),
@@ -86,10 +88,8 @@ const loginUserFulfilledEpic = action$ =>
 const logoutUserEpic = action$ =>
   action$.pipe(
     ofType(LOGOUT_USER),
-    mergeMap(() => _of(
-      from(AsyncStorage.removeItem(TOKEN)),
-      changeRoute('/'),
-    )),
+    mergeMap(() => from(AsyncStorage.removeItem(TOKEN))),
+    map(() => changeRoute('/')),
   );
 
 

@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import {
   StyleSheet,
   View,
+  AsyncStorage,
 } from 'react-native';
 import CameraHandler from './src/components/CameraHandler';
 import Message from './src/components/Message';
