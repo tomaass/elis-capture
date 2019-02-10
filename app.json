@@ -33,7 +33,11 @@
         "foregroundImage": "./src/images/android/playstore-icon.png",
         "backgroundColor": "#1b1922"
       },
-      "permissions": ["CAMERA"],
+      "permissions": [
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+      ],
       "splash": {
         "ldpi": "./src/images/android/mipmap-ldpi/ic_launcher.png",
         "mdpi": "./src/images/android/mipmap-mdpi/ic_launcher.png",

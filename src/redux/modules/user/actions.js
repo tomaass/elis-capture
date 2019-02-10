@@ -3,7 +3,6 @@ import { from, of as _of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   mergeMap,
-  tap,
   pluck,
   map,
   filter,
@@ -56,7 +55,6 @@ const authentificationEpic = action$ =>
     pluck('payload'),
     mergeMap(body =>
       from(AsyncStorage.getItem('TOKEN')).pipe(
-        tap(token => console.log('token', token, body)),
         map(token => ({ token, body })),
       )),
     filter(({ token, body }) => token || body),
