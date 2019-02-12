@@ -1,10 +1,7 @@
 /* @flow */
 import React from 'react';
 import { Camera as RNCamera } from 'expo';
-import {
-  View,
-  StyleSheet,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CameraFooter from '../CameraFooter';
 import type { FlashMode } from '../CameraHandler';
 
@@ -54,11 +51,12 @@ const Camera = ({
       style={styles.camera}
       type={RNCamera.Constants.Type.back}
       flashMode={RNCamera.Constants.FlashMode[flashMode]}
-      permissionDialogMessage="We need your access your camera, so you can take photos of your invoices."
+      permissionDialogMessage="We need your access your camera, so you can take photos of your documents"
       permissionDialogTitle="Permission to use camera"
       ref={getRef}
       ratio={ratio}
       onCameraReady={onCameraReady}
+      autoFocus={RNCamera.Constants.AutoFocus.on}
     />
     <CameraFooter
       openPreview={openPreview}

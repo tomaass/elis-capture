@@ -14,7 +14,7 @@ import Preview from '../Preview';
 import Camera from '../Camera';
 import NoPermission from '../NoPremission';
 import { uploadDocuments } from '../../redux/modules/documents/actions';
-import { selectQueue } from '../../redux/modules/queues/actions';
+import { fetchQueues, selectQueue } from '../../redux/modules/queues/actions';
 import QueuePicker from '../QueuePicker';
 import UploadIndicator from '../UploadIndicator';
 import type { Queue } from '../../redux/modules/queues/reducer';
@@ -29,6 +29,7 @@ type Props = {
   selectQueue: Function,
   send: Function,
   uploading: boolean,
+  fetchQueues: Function,
 }
 type State = {
   permissionsGranted: boolean,
@@ -61,6 +62,7 @@ class CameraHandler extends React.Component<Props, State> {
   componentWillMount() {
     this.loadFlashmodeSettings();
     this.requestPermission();
+    this.props.fetchQueues();
   }
 
   loadFlashmodeSettings = async () => {
@@ -214,6 +216,7 @@ class CameraHandler extends React.Component<Props, State> {
 const mapDispatchToProps = dispatch => ({
   send: (...args) => dispatch(uploadDocuments(...args)),
   selectQueue: (...args) => dispatch(selectQueue(...args)),
+  fetchQueues: (...args) => dispatch(fetchQueues(...args)),
 });
 
 const mapStateToProps = state => ({

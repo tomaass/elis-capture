@@ -39,7 +39,7 @@ const fetchQueuesEpic = action$ =>
   action$.pipe(
     ofType(FETCH_QUEUES),
     zip(
-      authGetJSON(`${apiUrl}/queues?pageSize=10&page=1`),
+      authGetJSON(`${apiUrl}/queues?pageSize=15&page=1`),
       from(AsyncStorage.getItem(QUEUE)),
     ),
     map(([, response, currentQueueIndex]) =>
