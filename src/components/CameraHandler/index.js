@@ -19,6 +19,7 @@ import QueuePicker from '../QueuePicker';
 import UploadIndicator from '../UploadIndicator';
 import type { Queue } from '../../redux/modules/queues/reducer';
 import { FLASHMODE } from '../../constants/config';
+import Message from '../Message';
 
 export type FlashMode = 'auto' | 'on' | 'off';
 
@@ -166,6 +167,7 @@ class CameraHandler extends React.Component<Props, State> {
     const { queues, currentQueueIndex, uploading } = this.props;
     return (
       <View style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <Message />
         {uploading && <UploadIndicator />}
         {permissionsGranted
           ? showPreview

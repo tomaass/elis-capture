@@ -9,10 +9,8 @@ import { Provider } from 'react-redux';
 import {
   StyleSheet,
   View,
-  AsyncStorage,
 } from 'react-native';
 import CameraHandler from './src/components/CameraHandler';
-import Message from './src/components/Message';
 import Login from './src/components/Login';
 import store from './src/redux/configureStore';
 import Routing from './src/decorators/routing';
@@ -23,7 +21,6 @@ const App = () => (
   <Provider store={store}>
     <NativeRouter>
       <View style={styles.container}>
-        <Message />
         <Routing />
         <Route exact path="/" component={Login} />
         <Route path="/camera" component={CameraHandler} />

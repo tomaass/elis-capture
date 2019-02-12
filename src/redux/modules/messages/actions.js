@@ -16,7 +16,7 @@ export const displayMessageFulfilled = () => ({
 const displayMessageEpic = action$ =>
   action$.pipe(
     ofType(DISPLAY_MESSAGE),
-    delay(3000),
+    delay(4000),
     map(displayMessageFulfilled),
   );
 

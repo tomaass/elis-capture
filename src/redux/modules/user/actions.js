@@ -28,7 +28,6 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const LOGIN_USER_FULFILLED = 'LOGIN_USER_FULFILLED';
 export const VALIDATE_CREDENTIALS = 'VALIDATE_CREDENTIALS';
-export const VALIDATE_CREDENTIALS_FULFILLED = 'VALIDATE_CREDENTIALS_FULFILLED';
 
 export const loginUser = (body: CredentialsBody) => ({
   type: LOGIN_USER,

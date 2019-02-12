@@ -6,29 +6,30 @@ import type { Message as Props } from '../../redux/modules/messages/reducer';
 
 
 const Message = ({ show, text }: Props) => show && (
-<View style={{
-  width: '100%',
-  height: '50%',
-  position: 'absolute',
-  zIndex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  top: 0,
-}}
->
   <View style={{
-    zIndex: 2,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: 'black',
-    opacity: 0.9,
+    width: '100%',
+    height: '50%',
+    position: 'absolute',
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
   }}
   >
-    <Text style={{ color: 'white' }}>
-      {text}
-    </Text>
+    <View style={{
+      zIndex: 10,
+      padding: 10,
+      borderRadius: 5,
+      backgroundColor: 'black',
+      opacity: 0.9,
+      color: 'white',
+    }}
+    >
+      <Text style={{ color: 'white' }}>
+        {text}
+      </Text>
+    </View>
   </View>
-</View>
 
 );
 
