@@ -9,14 +9,14 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { loginUser } from '../../redux/modules/user/actions';
+import { validateCredentials } from '../../redux/modules/user/actions';
 import Form from './components/Form';
 
 import logo from '../../images/logo2.png';
 import Message from '../Message';
 
 type State = { username: string, password: string, keyboardIsOpen: boolean }
-type Props = { login: Function }
+type Props = { validate: Function }
 
 class Login extends React.Component<Props, State> {
   keyboardDidShowListener = {};
@@ -30,10 +30,6 @@ class Login extends React.Component<Props, State> {
       password: '',
       keyboardIsOpen: false,
     };
-  }
-
-  componentWillMount() {
-    this.props.login();
   }
 
   componentDidMount() {
@@ -54,7 +50,7 @@ class Login extends React.Component<Props, State> {
 
   render() {
     const { username, password, keyboardIsOpen } = this.state;
-    const { login } = this.props;
+    const { validate } = this.props;
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <Message />
@@ -98,7 +94,7 @@ class Login extends React.Component<Props, State> {
           </View>
         </View>
         <Form
-          onSubmit={() => login({ password, username })}
+          onSubmit={() => validate({ password, username })}
           username={username}
           password={password}
           onPasswordChange={value =>
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: (...args) => dispatch(loginUser(...args)),
+  validate: (...args) => dispatch(validateCredentials(...args)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

@@ -14,6 +14,7 @@ import CameraHandler from './src/components/CameraHandler';
 import Login from './src/components/Login';
 import store from './src/redux/configureStore';
 import Routing from './src/decorators/routing';
+import Splash from './src/components/Splash';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT);
 
@@ -22,7 +23,8 @@ const App = () => (
     <NativeRouter>
       <View style={styles.container}>
         <Routing />
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={Splash} />
+        <Route exact path="/login" component={Login} />
         <Route path="/camera" component={CameraHandler} />
       </View>
     </NativeRouter>

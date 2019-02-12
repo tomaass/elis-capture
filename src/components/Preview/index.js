@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import PreviewFooter from '../PreviewFooter';
 import PreviewPages from '../PreviewPages';
-import AddPagesButton from './components/AddPagesButton';
 
 type Props = {
   files: Array<Object>,

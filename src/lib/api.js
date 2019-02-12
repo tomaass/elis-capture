@@ -26,11 +26,11 @@ export const authGetJSON = (url: string, settings: HeadersInit) =>
   withToken((token: string) =>
     ajax.getJSON(url, authDefaultSettings(token, settings)));
 
-export const errorHandler = (request) => {
-  switch (request.status) {
+export const errorHandler = (response: Response) => {
+  switch (response.status) {
     case 401: return _of(
       logoutUser(),
-      displayMessage('You are no logner logged in'),
+      displayMessage('You are no longer logged in'),
     );
     default: return _of(displayMessage('Terrible error occurred'));
   }

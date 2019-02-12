@@ -22,7 +22,6 @@ const Message = ({ show, text }: Props) => show && (
       borderRadius: 5,
       backgroundColor: 'black',
       opacity: 0.9,
-      color: 'white',
     }}
     >
       <Text style={{ color: 'white' }}>

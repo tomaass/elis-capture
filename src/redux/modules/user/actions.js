@@ -5,14 +5,13 @@ import {
   mergeMap,
   pluck,
   map,
-  filter,
+  mapTo,
   catchError,
 } from 'rxjs/operators';
 import { AsyncStorage } from 'react-native';
 import { combineEpics, ofType } from 'redux-observable';
 import { changeRoute } from '../route/actions';
 import { displayMessage } from '../messages/actions';
-import { fetchQueues } from '../queues/actions';
 import { apiUrl, TOKEN } from '../../../constants/config';
 
 type CredentialsBody = { username: string, password: string };
@@ -28,6 +27,7 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const LOGIN_USER_FULFILLED = 'LOGIN_USER_FULFILLED';
 export const VALIDATE_CREDENTIALS = 'VALIDATE_CREDENTIALS';
+export const CHECK_TOKEN = 'CHECK_TOKEN';
 
 export const loginUser = (body: CredentialsBody) => ({
   type: LOGIN_USER,
@@ -47,20 +47,20 @@ export const validateCredentials = (body: CredentialsBody) => ({
   payload: body,
 });
 
+export const checkToken = () => ({
+  type: CHECK_TOKEN,
+});
 
-const authentificationEpic = action$ =>
+const checkTokenEpic = action$ =>
   action$.pipe(
-    ofType(LOGIN_USER),
-    pluck('payload'),
-    mergeMap(body =>
-      from(AsyncStorage.getItem('TOKEN')).pipe(
-        map(token => ({ token, body })),
-      )),
-    filter(({ token, body }) => token || body),
-    map(({ token, body }) => token
-      ? loginUserFulfilled(token)
-      : validateCredentials(body)),
+    ofType(CHECK_TOKEN),
+    mergeMap(() => from(AsyncStorage.getItem(TOKEN))),
+    map(token =>
+      token
+        ? loginUserFulfilled(token)
+        : changeRoute('/login')),
   );
+
 const validateCredentialsEpic = action$ =>
   action$.pipe(
     ofType(VALIDATE_CREDENTIALS),
@@ -76,22 +76,19 @@ const loginUserFulfilledEpic = action$ =>
     ofType(LOGIN_USER_FULFILLED),
     pluck('payload'),
     mergeMap(token => AsyncStorage.setItem(TOKEN, token)),
-    mergeMap(() => _of(
-      changeRoute('/camera'),
-      fetchQueues(),
-    )),
+    mapTo(changeRoute('/camera')),
   );
 
 const logoutUserEpic = action$ =>
   action$.pipe(
     ofType(LOGOUT_USER),
     mergeMap(() => from(AsyncStorage.removeItem(TOKEN))),
-    map(() => changeRoute('/')),
+    map(() => changeRoute('/login')),
   );
 
 
 export default combineEpics(
-  authentificationEpic,
+  checkTokenEpic,
   validateCredentialsEpic,
   loginUserFulfilledEpic,
   logoutUserEpic,
